@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'thelamonblack';
+  src: url('fonts/Thelamonblack.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'bleeding-cowboys';
+  src: url('fonts/BleedingCowboys.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
