@@ -205,8 +205,10 @@ export const useGameStore = defineStore('game', () => {
   }
 
   const checkVictory = () => {
-    const nullCellsCount = boardDisplayed.value.flat().filter((cell) => cell === null).length
-    if (nullCellsCount === bombs.value) return victory()
+    const cellsCount = boardDisplayed.value
+      .flat()
+      .filter((cell) => cell === null || cell === -2).length
+    if (cellsCount === bombs.value) return victory()
   }
 
   const gameOver = () => {
