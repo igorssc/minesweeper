@@ -15,6 +15,7 @@ const colorItem: ColorItem = {
   5: 'text-orange-500',
   6: 'text-purple-500',
   7: 'text-yellow-500',
+  8: 'text-cyan-500',
   default: ''
 }
 
@@ -27,8 +28,8 @@ defineProps<{
   <div
     :class="
       twMerge(
-        'w-8 h-8 p-4 bg-zinc-700 flex justify-center items-center text-yellow-700 cursor-pointer hover:bg-zinc-900',
-        typeof item === 'number' && 'bg-zinc-600',
+        'w-8 h-8 p-4 bg-gray-700 flex justify-center items-center text-yellow-500 cursor-pointer hover:bg-gray-900',
+        typeof item === 'number' && 'bg-gray-600',
         colorItem[item ?? 'default']
       )
     "
