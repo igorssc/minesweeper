@@ -4,9 +4,9 @@ import { defineStore } from 'pinia'
 export type BoardItemProps = null | number
 
 export const useGameStore = defineStore('game', () => {
-  const columns = ref(15)
+  const columns = ref(30)
   const rows = ref(15)
-  const bombs = ref(30)
+  const bombs = ref(20)
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
   const boardDisplayed = ref<BoardItemProps[][]>([])
@@ -14,6 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const elapsedTime = ref(0)
   let timerInterval: ReturnType<typeof setInterval> | null = null
   const isFirstClick = ref(true)
+  const minimumClicks = ref(0)
 
   const stop = () => {
     isClosed.value = true
@@ -30,6 +31,8 @@ export const useGameStore = defineStore('game', () => {
     stopTimer()
     placeBombsOnBoard()
     populateMinesweeperBoard()
+
+    minimumClicks.value = calculateMinimumClicks()
   }
 
   const createEmptyBoard = (): BoardItemProps[][] =>
@@ -226,6 +229,74 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
+  const calculateMinimumClicks = (): number => {
+    const visited = Array.from({ length: rows.value }, () => Array(columns.value).fill(false))
+    const accessibleNumericalCells = Array.from({ length: rows.value }, () =>
+      Array(columns.value).fill(false)
+    )
+
+    const isWithinBounds = (row: number, col: number): boolean =>
+      row >= 0 && row < rows.value && col >= 0 && col < columns.value
+
+    const exploreIsland = (row: number, col: number) => {
+      const queue: [number, number][] = [[row, col]]
+
+      while (queue.length > 0) {
+        const [currentRow, currentCol] = queue.shift()!
+        if (visited[currentRow][currentCol]) continue
+        visited[currentRow][currentCol] = true
+
+        for (const [rowOffset, colOffset] of directionOffsets) {
+          const adjacentRow = currentRow + rowOffset
+          const adjacentCol = currentCol + colOffset
+          if (
+            isWithinBounds(adjacentRow, adjacentCol) &&
+            !visited[adjacentRow][adjacentCol] &&
+            baseBoard.value[adjacentRow][adjacentCol] === null
+          ) {
+            queue.push([adjacentRow, adjacentCol])
+          }
+          if (
+            isWithinBounds(adjacentRow, adjacentCol) &&
+            baseBoard.value[adjacentRow][adjacentCol] !== null &&
+            baseBoard.value[adjacentRow][adjacentCol] !== 0 // Not counting cells with bombs
+          ) {
+            accessibleNumericalCells[adjacentRow][adjacentCol] = true
+          }
+        }
+      }
+    }
+
+    let islandCount = 0
+
+    // Count the number of distinct safe islands
+    for (let row = 0; row < rows.value; row++) {
+      for (let col = 0; col < columns.value; col++) {
+        if (!visited[row][col] && baseBoard.value[row][col] === null) {
+          exploreIsland(row, col)
+          islandCount += 1
+        }
+      }
+    }
+
+    // Count the number of non-revealed numerical cells that are not accessible through safe islands
+    let isolatedNumericalCells = 0
+    for (let row = 0; row < rows.value; row++) {
+      for (let col = 0; col < columns.value; col++) {
+        if (
+          baseBoard.value[row][col] !== null &&
+          baseBoard.value[row][col] !== 0 &&
+          !accessibleNumericalCells[row][col]
+        ) {
+          isolatedNumericalCells += 1
+        }
+      }
+    }
+
+    // The minimum number of clicks is the number of islands plus the number of isolated numerical cells
+    return islandCount + isolatedNumericalCells
+  }
+
   const isWithinBoardBounds = (row: number, col: number): boolean =>
     row >= 0 && row < rows.value && col >= 0 && col < columns.value
 
@@ -267,6 +338,7 @@ export const useGameStore = defineStore('game', () => {
     handleCellClick,
     handleCellClickFlag,
     stop,
-    elapsedTime
+    elapsedTime,
+    minimumClicks
   }
 })
