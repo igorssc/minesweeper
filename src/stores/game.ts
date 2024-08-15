@@ -1,12 +1,12 @@
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 export type BoardItemProps = null | number
 
 export const useGameStore = defineStore('game', () => {
-  const columns = ref(30)
-  const rows = ref(15)
-  const bombs = ref(20)
+  const columns = ref(10)
+  const rows = ref(10)
+  const bombs = ref(1)
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
   const boardDisplayed = ref<BoardItemProps[][]>([])
@@ -15,6 +15,11 @@ export const useGameStore = defineStore('game', () => {
   let timerInterval: ReturnType<typeof setInterval> | null = null
   const isFirstClick = ref(true)
   const minimumClicks = ref(0)
+  const isVictory = ref(false)
+  const clicksCount = reactive({
+    leftCursor: 0,
+    rightCursor: 0
+  })
 
   const stop = () => {
     isClosed.value = true
@@ -27,6 +32,10 @@ export const useGameStore = defineStore('game', () => {
     isClosed.value = false
     isFirstClick.value = true
     elapsedTime.value = 0
+    clicksCount.leftCursor = 0
+    clicksCount.rightCursor = 0
+    bombsDisplayed.value = bombs.value
+    isVictory.value = false
 
     stopTimer()
     placeBombsOnBoard()
@@ -118,6 +127,8 @@ export const useGameStore = defineStore('game', () => {
       revealCell(row, col)
     }
 
+    clicksCount.leftCursor++
+
     const flags = countFlags()
     bombsDisplayed.value = bombs.value - flags
 
@@ -127,13 +138,14 @@ export const useGameStore = defineStore('game', () => {
   const handleCellClickFlag = (row: number, col: number) => {
     if (isClosed.value) return
 
-    if (bombsDisplayed.value <= 0) return
-
     const cellValue = boardDisplayed.value[row][col]
+
+    if (bombsDisplayed.value <= 0 && cellValue !== -2) return
 
     if (cellValue === -2) {
       boardDisplayed.value[row][col] = null
       bombsDisplayed.value++
+      clicksCount.rightCursor++
       return
     }
 
@@ -141,6 +153,7 @@ export const useGameStore = defineStore('game', () => {
 
     boardDisplayed.value[row][col] = -2
     bombsDisplayed.value--
+    clicksCount.rightCursor++
   }
 
   const countFlags = () => {
@@ -219,6 +232,7 @@ export const useGameStore = defineStore('game', () => {
   const victory = () => {
     stop()
     markBombsAsVictory()
+    isVictory.value = true
   }
 
   const markBombsAsVictory = () => {
@@ -334,13 +348,16 @@ export const useGameStore = defineStore('game', () => {
   return {
     columns,
     rows,
-    bombs: bombsDisplayed,
+    bombs,
+    bombsDisplayed,
     board: boardDisplayed,
     init,
     handleCellClick,
     handleCellClickFlag,
     stop,
     elapsedTime,
-    minimumClicks
+    minimumClicks,
+    clicksCount,
+    isVictory
   }
 })

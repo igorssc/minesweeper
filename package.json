@@ -16,6 +16,7 @@
     "pinia": "^2.1.7",
     "tailwind-merge": "^2.5.2",
     "vue": "^3.4.29",
+    "vue-confetti-explosion": "^1.0.2",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {

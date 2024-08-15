@@ -28,7 +28,7 @@ defineProps<{
   <div
     :class="
       twMerge(
-        'w-8 h-8 p-4 bg-gray-700 flex justify-center items-center text-yellow-500 cursor-pointer hover:bg-gray-900',
+        'w-8 h-8 p-4 bg-gray-700 flex justify-center items-center text-yellow-500 font-black cursor-pointer hover:bg-gray-900',
         typeof item === 'number' && 'bg-gray-600',
         colorItem[item ?? 'default']
       )

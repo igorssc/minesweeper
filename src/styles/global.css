@@ -1,6 +1,6 @@
 @import '../fonts/fonts.css';
 body {
-  @apply bg-zinc-900 bg-background bg-cover bg-center
+  @apply bg-background bg-cover bg-center bg-no-repeat h-full
 }
 
 @tailwind base;
