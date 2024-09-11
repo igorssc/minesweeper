@@ -1,7 +1,4 @@
 @import '../fonts/fonts.css';
-body {
-  @apply bg-background bg-cover bg-center bg-no-repeat h-full
-}
 
 @tailwind base;
 @tailwind components;
