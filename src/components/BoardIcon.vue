@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { BoardItemProps } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
+import bombGif from '@/assets/bomb.gif'
+import { ref, watch } from 'vue'
 
 type ColorItem = {
   [key: number]: string
@@ -19,9 +21,24 @@ const colorItem: ColorItem = {
   default: ''
 }
 
-defineProps<{
+const bombGifSrc = ref('')
+
+function updateGifSrc() {
+  bombGifSrc.value = `${bombGif}?t=${Date.now()}`
+}
+
+const props = defineProps<{
   item: BoardItemProps
 }>()
+
+watch(
+  () => props.item,
+  (newValue) => {
+    if (newValue === 0) {
+      updateGifSrc()
+    }
+  }
+)
 </script>
 
 <template>
@@ -36,7 +53,10 @@ defineProps<{
   >
     <span v-if="item === -1"></span>
     <span v-else-if="item === -2">🚩</span>
-    <span v-else-if="item === 0">💣</span>
+    <span v-else-if="item === 0"
+      ><img :src="bombGifSrc" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
+    /></span>
+
     <span v-else>{{ item }}</span>
   </div>
 </template>

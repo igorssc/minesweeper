@@ -13,8 +13,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "howler": "^2.2.4",
     "pinia": "^2.1.7",
     "tailwind-merge": "^2.5.2",
+    "use-sound": "^4.0.3",
     "vue": "^3.4.29",
     "vue-confetti-explosion": "^1.0.2",
     "vue-router": "^4.3.3"
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
     "@tsconfig/node20": "^20.1.4",
+    "@types/howler": "^2.2.11",
     "@types/node": "^20.14.5",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",

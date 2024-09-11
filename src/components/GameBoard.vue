@@ -3,7 +3,6 @@ import { useGameStore } from '@/stores/game'
 import BoardIcon from './BoardIcon.vue'
 import { onMounted } from 'vue'
 import FrameBase from './FrameBase.vue'
-
 const gameData = useGameStore()
 
 const handleClick = (row: number, col: number, event: MouseEvent) => {

@@ -1,5 +1,8 @@
 import { ref, onUnmounted, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import winnerSound from '@/assets/audios/winner.mp3'
+import bombSound from '@/assets/audios/bomb-explosion.mp3'
+import { Howl } from 'howler'
 
 export type BoardItemProps = null | number
 
@@ -16,9 +19,20 @@ export const useGameStore = defineStore('game', () => {
   const isFirstClick = ref(true)
   const minimumClicks = ref(0)
   const isVictory = ref(false)
+  const isGameOver = ref(false)
   const clicksCount = reactive({
     leftCursor: 0,
     rightCursor: 0
+  })
+
+  const winnerSoundHowl = new Howl({
+    src: [winnerSound],
+    volume: 0.02
+  })
+
+  const bombSoundHowl = new Howl({
+    src: [bombSound],
+    volume: 0.0015
   })
 
   const stop = () => {
@@ -36,6 +50,7 @@ export const useGameStore = defineStore('game', () => {
     clicksCount.rightCursor = 0
     bombsDisplayed.value = bombs.value
     isVictory.value = false
+    isGameOver.value = false
 
     stopTimer()
     placeBombsOnBoard()
@@ -117,7 +132,7 @@ export const useGameStore = defineStore('game', () => {
 
     if (cellValueDisplayed === -2) return
 
-    if (cellValue === 0) return gameOver()
+    if (cellValue === 0) return gameOver(row, col)
 
     if (cellValue === null) {
       revealAdjacentEmptyCells(row, col)
@@ -176,9 +191,61 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  const revealCell = (row: number, col: number) => {
+  const timeouts: number[] = [] // Array para armazenar os IDs dos timeouts
+
+  const revealAllBombsWithSound = (r: number, c: number) => {
+    bombSoundHowl.play()
+    revealCell(r, c)
+
+    for (let row = 0; row < rows.value; row++) {
+      for (let col = 0; col < columns.value; col++) {
+        if (row === r && col === c) continue
+
+        if (baseBoard.value[row][col] === 0) {
+          const baseRandom = (bombs.value / 2) * 100
+          const randomDelay = Math.random() * baseRandom
+
+          const loop = setTimeout(() => {
+            if (!isGameOver.value) {
+              clearTimeout(loop)
+              return
+            }
+            const isBombPlay = bombs.value <= 30 ? true : Math.random() < 0.5
+            isBombPlay && bombSoundHowl.play()
+            console.log(isBombPlay)
+            revealCell(row, col, 0)
+          }, randomDelay)
+
+          timeouts.push(loop) // Armazena o ID do timeout
+        }
+      }
+    }
+  }
+
+  // Função para parar todos os timeouts
+  const stopAllTimeouts = () => {
+    timeouts.forEach((timeoutId) => clearTimeout(timeoutId))
+    timeouts.length = 0 // Limpa o array
+  }
+
+  // Exemplo de uso: você pode chamar `stopAllTimeouts` quando quiser parar os timeouts, por exemplo, quando o jogo termina
+  if (isGameOver.value) {
+    stopAllTimeouts()
+  }
+
+  function playBombSound(times: number) {
+    for (let i = 0; i < times; i++) {
+      const randomDelay = Math.random() * 3000 // Delay aleatório entre 0 e 1000ms
+      setTimeout(() => {
+        bombSoundHowl.play()
+      }, randomDelay)
+    }
+  }
+
+  const revealCell = (row: number, col: number, base?: number) => {
+    if (typeof boardDisplayed.value[row][col] === 'number') return
     const cellValue = baseBoard.value[row][col] ?? -1
-    boardDisplayed.value[row][col] = cellValue
+    boardDisplayed.value[row][col] = base ?? cellValue
   }
 
   const revealAdjacentEmptyCells = (row: number, col: number) => {
@@ -224,15 +291,18 @@ export const useGameStore = defineStore('game', () => {
     if (cellsCount === bombs.value) return victory()
   }
 
-  const gameOver = () => {
+  const gameOver = (row: number, col: number) => {
     stop()
-    revealAllBombs()
+    isGameOver.value = true
+    revealAllBombsWithSound(row, col)
+    // playBombSound(bombs.value)
   }
 
   const victory = () => {
     stop()
-    markBombsAsVictory()
     isVictory.value = true
+    markBombsAsVictory()
+    winnerSoundHowl.play()
   }
 
   const markBombsAsVictory = () => {
