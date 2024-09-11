@@ -7,9 +7,9 @@ import { Howl } from 'howler'
 export type BoardItemProps = null | number
 
 export const useGameStore = defineStore('game', () => {
-  const columns = ref(10)
-  const rows = ref(10)
-  const bombs = ref(1)
+  const columns = ref(50)
+  const rows = ref(50)
+  const bombs = ref(150)
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
   const boardDisplayed = ref<BoardItemProps[][]>([])
@@ -24,16 +24,7 @@ export const useGameStore = defineStore('game', () => {
     leftCursor: 0,
     rightCursor: 0
   })
-
-  const winnerSoundHowl = new Howl({
-    src: [winnerSound],
-    volume: 0.02
-  })
-
-  const bombSoundHowl = new Howl({
-    src: [bombSound],
-    volume: 0.0015
-  })
+  const allBombsPositions = ref<[number, number][]>([])
 
   const stop = () => {
     isClosed.value = true
@@ -57,6 +48,8 @@ export const useGameStore = defineStore('game', () => {
     populateMinesweeperBoard()
 
     minimumClicks.value = calculateMinimumClicks()
+
+    allBombsPositions.value = checkAllBombs()
   }
 
   const createEmptyBoard = (): BoardItemProps[][] =>
@@ -191,35 +184,65 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  const timeouts: number[] = [] // Array para armazenar os IDs dos timeouts
-
-  const revealAllBombsWithSound = (r: number, c: number) => {
-    bombSoundHowl.play()
-    revealCell(r, c)
+  const checkAllBombs = () => {
+    const bombsPositions: [number, number][] = []
 
     for (let row = 0; row < rows.value; row++) {
       for (let col = 0; col < columns.value; col++) {
-        if (row === r && col === c) continue
-
         if (baseBoard.value[row][col] === 0) {
-          const baseRandom = (bombs.value / 2) * 100
-          const randomDelay = Math.random() * baseRandom
-
-          const loop = setTimeout(() => {
-            if (!isGameOver.value) {
-              clearTimeout(loop)
-              return
-            }
-            const isBombPlay = bombs.value <= 30 ? true : Math.random() < 0.5
-            isBombPlay && bombSoundHowl.play()
-            console.log(isBombPlay)
-            revealCell(row, col, 0)
-          }, randomDelay)
-
-          timeouts.push(loop) // Armazena o ID do timeout
+          bombsPositions.push([row, col])
         }
       }
     }
+
+    return bombsPositions
+  }
+
+  const timeouts: number[] = [] // Array para armazenar os IDs dos timeouts
+
+  const sortBombsRadially = (
+    bombPositions: [number, number][],
+    currentRow: number,
+    currentCol: number
+  ) => {
+    // Ordena o array de posições de bombas com base na distância Euclidiana da posição atual
+    return bombPositions.sort(([rowA, colA], [rowB, colB]) => {
+      const distanceA = Math.hypot(rowA - currentRow, colA - currentCol)
+      const distanceB = Math.hypot(rowB - currentRow, colB - currentCol)
+      return distanceA - distanceB // Menores distâncias primeiro
+    })
+  }
+
+  const revealAllBombsWithSound = (r: number, c: number) => {
+    const bombSoundHowl = new Howl({
+      src: [bombSound],
+      volume: 0.0015
+    })
+
+    bombSoundHowl.play()
+    revealCell(r, c)
+
+    const sortedBombs = sortBombsRadially(allBombsPositions.value, r, c)
+
+    sortedBombs.forEach(([row, col], index) => {
+      if (row === r && col === c) return
+
+      const delay = index * 50
+
+      const loop = setTimeout(() => {
+        if (!isGameOver.value) {
+          clearTimeout(loop)
+          return
+        }
+
+        const isBombPlay = bombs.value <= 30 ? true : Math.random() < 0.5
+        isBombPlay && bombSoundHowl.play()
+
+        revealCell(row, col, 0)
+      }, delay)
+
+      timeouts.push(loop) // Armazena o ID do timeout
+    })
   }
 
   // Função para parar todos os timeouts
@@ -231,15 +254,6 @@ export const useGameStore = defineStore('game', () => {
   // Exemplo de uso: você pode chamar `stopAllTimeouts` quando quiser parar os timeouts, por exemplo, quando o jogo termina
   if (isGameOver.value) {
     stopAllTimeouts()
-  }
-
-  function playBombSound(times: number) {
-    for (let i = 0; i < times; i++) {
-      const randomDelay = Math.random() * 3000 // Delay aleatório entre 0 e 1000ms
-      setTimeout(() => {
-        bombSoundHowl.play()
-      }, randomDelay)
-    }
   }
 
   const revealCell = (row: number, col: number, base?: number) => {
@@ -302,6 +316,12 @@ export const useGameStore = defineStore('game', () => {
     stop()
     isVictory.value = true
     markBombsAsVictory()
+
+    const winnerSoundHowl = new Howl({
+      src: [winnerSound],
+      volume: 0.02
+    })
+
     winnerSoundHowl.play()
   }
 
@@ -428,6 +448,7 @@ export const useGameStore = defineStore('game', () => {
     elapsedTime,
     minimumClicks,
     clicksCount,
-    isVictory
+    isVictory,
+    isGameOver
   }
 })

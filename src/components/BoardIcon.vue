@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { BoardItemProps } from '@/stores/game'
+import { useGameStore, type BoardItemProps } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
 import bombGif from '@/assets/bomb.gif'
 import { ref, watch } from 'vue'
+
+const gameData = useGameStore()
 
 type ColorItem = {
   [key: number]: string
@@ -45,9 +47,10 @@ watch(
   <div
     :class="
       twMerge(
-        'w-8 h-8 p-4 bg-gray-700 flex justify-center items-center text-yellow-500 font-black cursor-pointer hover:bg-gray-900',
+        'w-8 h-8 p-4 bg-gray-700 flex justify-center items-center text-yellow-500 font-black',
         typeof item === 'number' && 'bg-gray-600',
-        colorItem[item ?? 'default']
+        colorItem[item ?? 'default'],
+        !(gameData.isGameOver || gameData.isVictory) && 'cursor-pointer hover:bg-gray-900'
       )
     "
   >
