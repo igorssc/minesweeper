@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useGameStore, type BoardItemProps } from '@/stores/game'
+import { useGameStore } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
 import bombGif from '@/assets/bomb.gif'
 import { ref, watch } from 'vue'
+import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 
 const gameData = useGameStore()
 
@@ -54,9 +55,9 @@ watch(
       )
     "
   >
-    <span v-if="item === -1"></span>
-    <span v-else-if="item === -2">🚩</span>
-    <span v-else-if="item === 0"
+    <span v-if="item === CELL_STATE.EMPTY"></span>
+    <span v-else-if="item === CELL_STATE.FLAG">🚩</span>
+    <span v-else-if="item === CELL_STATE.BOMB"
       ><img :src="bombGifSrc" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
     /></span>
 

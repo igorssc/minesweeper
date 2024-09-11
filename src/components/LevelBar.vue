@@ -2,35 +2,11 @@
 import { useGameStore } from '@/stores/game'
 import FrameBase from './FrameBase.vue'
 import LevelButton from './LevelButton.vue'
+import { defaultLevels } from '@/utils/defaultLevels'
 
 const gameData = useGameStore()
 
-const levels = {
-  beginner: {
-    label: 'Iniciante',
-    rows: 10,
-    columns: 10,
-    bombs: 10
-  },
-  intermediate: {
-    label: 'Intermediário',
-    rows: 16,
-    columns: 16,
-    bombs: 40
-  },
-  expert: {
-    label: 'Especialista',
-    rows: 16,
-    columns: 30,
-    bombs: 100
-  },
-  customize: {
-    label: 'Personalizar',
-    rows: 30,
-    columns: 30,
-    bombs: 150
-  }
-}
+const levels = defaultLevels
 
 const availableLevels = Object.keys(levels) as Array<keyof typeof levels>
 

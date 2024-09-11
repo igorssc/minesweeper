@@ -3,8 +3,7 @@ import { defineStore } from 'pinia'
 import winnerSound from '@/assets/audios/winner.mp3'
 import bombSound from '@/assets/audios/bomb-explosion.mp3'
 import { Howl } from 'howler'
-
-export type BoardItemProps = null | number
+import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 
 export const useGameStore = defineStore('game', () => {
   const columns = ref(30)
@@ -68,7 +67,7 @@ export const useGameStore = defineStore('game', () => {
       if (bombPositions.has(positionKey)) continue
 
       bombPositions.add(positionKey)
-      baseBoard.value[row][column] = 0
+      baseBoard.value[row][column] = CELL_STATE.BOMB
     }
   }
 
@@ -82,7 +81,7 @@ export const useGameStore = defineStore('game', () => {
 
         if (!isWithinBoardBounds(adjacentRow, adjacentCol)) continue
 
-        if (baseBoard.value[adjacentRow][adjacentCol] === 0) {
+        if (baseBoard.value[adjacentRow][adjacentCol] === CELL_STATE.BOMB) {
           adjacentBombCount++
         }
       }
@@ -106,10 +105,10 @@ export const useGameStore = defineStore('game', () => {
     col: number,
     countBombs: (row: number, col: number) => number
   ): number | null => {
-    if (baseBoard.value[row][col] === 0) return 0
+    if (baseBoard.value[row][col] === CELL_STATE.BOMB) return CELL_STATE.BOMB
 
     const adjacentBombs = countBombs(row, col)
-    return adjacentBombs > 0 ? adjacentBombs : null
+    return isNumberCell(adjacentBombs) ? adjacentBombs : null
   }
 
   const relocateBomb = (row: number, col: number) => {
@@ -118,11 +117,14 @@ export const useGameStore = defineStore('game', () => {
     do {
       newRow = Math.floor(Math.random() * rows.value)
       newCol = Math.floor(Math.random() * columns.value)
-    } while (baseBoard.value[newRow][newCol] === 0 || (newRow === row && newCol === col))
+    } while (
+      baseBoard.value[newRow][newCol] === CELL_STATE.BOMB ||
+      (newRow === row && newCol === col)
+    )
 
     // Move a bomba para a nova posição
     baseBoard.value[row][col] = null
-    baseBoard.value[newRow][newCol] = 0
+    baseBoard.value[newRow][newCol] = CELL_STATE.BOMB
   }
 
   const handleCellClick = (row: number, col: number) => {
@@ -132,7 +134,7 @@ export const useGameStore = defineStore('game', () => {
       startTimer()
       isFirstClick.value = false
 
-      if (baseBoard.value[row][col] === 0 && safeStart.value) {
+      if (baseBoard.value[row][col] === CELL_STATE.BOMB && safeStart.value) {
         relocateBomb(row, col)
         populateMinesweeperBoard() // Atualiza o board após realocar a bomba
       }
@@ -142,9 +144,9 @@ export const useGameStore = defineStore('game', () => {
 
     const cellValueDisplayed = boardDisplayed.value[row][col]
 
-    if (cellValueDisplayed === -2) return
+    if (cellValueDisplayed === CELL_STATE.FLAG) return
 
-    if (cellValue === 0) return gameOver(row, col)
+    if (cellValue === CELL_STATE.BOMB) return gameOver(row, col)
 
     if (cellValue === null) {
       revealAdjacentEmptyCells(row, col)
@@ -167,9 +169,9 @@ export const useGameStore = defineStore('game', () => {
 
     const cellValue = boardDisplayed.value[row][col]
 
-    if (bombsDisplayed.value <= 0 && cellValue !== -2) return
+    if (bombsDisplayed.value <= CELL_STATE.BOMB && cellValue !== CELL_STATE.FLAG) return
 
-    if (cellValue === -2) {
+    if (cellValue === CELL_STATE.FLAG) {
       boardDisplayed.value[row][col] = null
       bombsDisplayed.value++
       clicksCount.rightCursor++
@@ -178,7 +180,7 @@ export const useGameStore = defineStore('game', () => {
 
     if (typeof cellValue === 'number') return
 
-    boardDisplayed.value[row][col] = -2
+    boardDisplayed.value[row][col] = CELL_STATE.FLAG
     bombsDisplayed.value--
     clicksCount.rightCursor++
   }
@@ -188,19 +190,11 @@ export const useGameStore = defineStore('game', () => {
 
     for (let row = 0; row < rows.value; row++) {
       for (let col = 0; col < columns.value; col++) {
-        if (boardDisplayed.value[row][col] === -2) flags++
+        if (boardDisplayed.value[row][col] === CELL_STATE.FLAG) flags++
       }
     }
 
     return flags
-  }
-
-  const revealAllBombs = () => {
-    for (let row = 0; row < rows.value; row++) {
-      for (let col = 0; col < columns.value; col++) {
-        if (baseBoard.value[row][col] === 0) revealCell(row, col)
-      }
-    }
   }
 
   const checkAllBombs = () => {
@@ -208,7 +202,7 @@ export const useGameStore = defineStore('game', () => {
 
     for (let row = 0; row < rows.value; row++) {
       for (let col = 0; col < columns.value; col++) {
-        if (baseBoard.value[row][col] === 0) {
+        if (baseBoard.value[row][col] === CELL_STATE.BOMB) {
           bombsPositions.push([row, col])
         }
       }
@@ -257,7 +251,7 @@ export const useGameStore = defineStore('game', () => {
         const isBombPlay = bombs.value <= 30 ? true : Math.random() < 0.5
         isBombPlay && bombSoundHowl.play()
 
-        revealCell(row, col, 0)
+        revealCell(row, col, CELL_STATE.BOMB)
       }, delay)
 
       timeouts.push(loop) // Armazena o ID do timeout
@@ -277,7 +271,7 @@ export const useGameStore = defineStore('game', () => {
 
   const revealCell = (row: number, col: number, base?: number) => {
     if (typeof boardDisplayed.value[row][col] === 'number') return
-    const cellValue = baseBoard.value[row][col] ?? -1
+    const cellValue = baseBoard.value[row][col] ?? CELL_STATE.EMPTY
     boardDisplayed.value[row][col] = base ?? cellValue
   }
 
@@ -310,7 +304,7 @@ export const useGameStore = defineStore('game', () => {
           queue.push([adjacentRow, adjacentCol])
           continue
         }
-        if (baseBoard.value[adjacentRow][adjacentCol]! > 0) {
+        if (isNumberCell(baseBoard.value[adjacentRow][adjacentCol])) {
           revealCell(adjacentRow, adjacentCol)
         }
       }
@@ -320,7 +314,7 @@ export const useGameStore = defineStore('game', () => {
   const checkVictory = () => {
     const cellsCount = boardDisplayed.value
       .flat()
-      .filter((cell) => cell === null || cell === -2).length
+      .filter((cell) => cell === null || cell === CELL_STATE.FLAG).length
     if (cellsCount === bombs.value) return victory()
   }
 
@@ -347,8 +341,8 @@ export const useGameStore = defineStore('game', () => {
   const markBombsAsVictory = () => {
     for (let row = 0; row < rows.value; row++) {
       for (let col = 0; col < columns.value; col++) {
-        if (baseBoard.value[row][col] === 0) {
-          boardDisplayed.value[row][col] = -2
+        if (baseBoard.value[row][col] === CELL_STATE.BOMB) {
+          boardDisplayed.value[row][col] = CELL_STATE.FLAG
         }
       }
     }
@@ -384,7 +378,7 @@ export const useGameStore = defineStore('game', () => {
           if (
             isWithinBounds(adjacentRow, adjacentCol) &&
             baseBoard.value[adjacentRow][adjacentCol] !== null &&
-            baseBoard.value[adjacentRow][adjacentCol] !== 0 // Not counting cells with bombs
+            baseBoard.value[adjacentRow][adjacentCol] !== CELL_STATE.BOMB // Not counting cells with bombs
           ) {
             accessibleNumericalCells[adjacentRow][adjacentCol] = true
           }
@@ -410,7 +404,7 @@ export const useGameStore = defineStore('game', () => {
       for (let col = 0; col < columns.value; col++) {
         if (
           baseBoard.value[row][col] !== null &&
-          baseBoard.value[row][col] !== 0 &&
+          baseBoard.value[row][col] !== CELL_STATE.BOMB &&
           !accessibleNumericalCells[row][col]
         ) {
           isolatedNumericalCells += 1
