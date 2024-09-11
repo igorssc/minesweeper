@@ -7,8 +7,8 @@ import { Howl } from 'howler'
 export type BoardItemProps = null | number
 
 export const useGameStore = defineStore('game', () => {
-  const columns = ref(50)
-  const rows = ref(50)
+  const columns = ref(30)
+  const rows = ref(30)
   const bombs = ref(150)
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
@@ -20,6 +20,7 @@ export const useGameStore = defineStore('game', () => {
   const minimumClicks = ref(0)
   const isVictory = ref(false)
   const isGameOver = ref(false)
+  const safeStart = ref(true) // Ref para gerenciar o início seguro
   const clicksCount = reactive({
     leftCursor: 0,
     rightCursor: 0
@@ -111,12 +112,30 @@ export const useGameStore = defineStore('game', () => {
     return adjacentBombs > 0 ? adjacentBombs : null
   }
 
+  const relocateBomb = (row: number, col: number) => {
+    let newRow, newCol
+
+    do {
+      newRow = Math.floor(Math.random() * rows.value)
+      newCol = Math.floor(Math.random() * columns.value)
+    } while (baseBoard.value[newRow][newCol] === 0 || (newRow === row && newCol === col))
+
+    // Move a bomba para a nova posição
+    baseBoard.value[row][col] = null
+    baseBoard.value[newRow][newCol] = 0
+  }
+
   const handleCellClick = (row: number, col: number) => {
     if (isClosed.value) return
 
     if (isFirstClick.value) {
       startTimer()
       isFirstClick.value = false
+
+      if (baseBoard.value[row][col] === 0 && safeStart.value) {
+        relocateBomb(row, col)
+        populateMinesweeperBoard() // Atualiza o board após realocar a bomba
+      }
     }
 
     const cellValue = baseBoard.value[row][col]
