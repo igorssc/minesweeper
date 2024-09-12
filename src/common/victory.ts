@@ -12,6 +12,7 @@ type VictoryProps = {
   baseBoard: Ref<BoardItemProps[][]>
   boardDisplayed: Ref<BoardItemProps[][]>
   isClosed: Ref<boolean>
+  hasSound: Ref<boolean>
   timerInterval: Ref<number | null>
 }
 
@@ -22,6 +23,7 @@ export const victory = ({
   boardDisplayed,
   isVictory,
   isClosed,
+  hasSound,
   timerInterval
 }: VictoryProps) => {
   isVictory.value = true
@@ -43,5 +45,5 @@ export const victory = ({
     volume: 0.02
   })
 
-  winnerSoundHowl.play()
+  hasSound.value && winnerSoundHowl.play()
 }

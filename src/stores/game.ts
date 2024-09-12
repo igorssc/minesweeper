@@ -33,6 +33,7 @@ export const useGameStore = defineStore('game', () => {
   const allBombsPositions = ref<[number, number][]>([])
   const timerInterval = ref<ReturnType<typeof setInterval> | null>(null)
   const timeouts = ref<number[]>([])
+  const hasSound = ref(true)
 
   const clicksCount = reactive({
     leftCursor: 0,
@@ -103,7 +104,8 @@ export const useGameStore = defineStore('game', () => {
       timerInterval,
       timeouts,
       performanceMetric,
-      minimumClicks
+      minimumClicks,
+      hasSound
     })
 
   const handleCellClickFlagFunction = ({ row, column }: { row: number; column: number }) =>
@@ -140,6 +142,7 @@ export const useGameStore = defineStore('game', () => {
     clicksCount,
     isVictory,
     isGameOver,
+    hasSound,
     hasSafeStart,
     level
   }

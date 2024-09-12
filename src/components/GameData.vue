@@ -6,6 +6,7 @@ import ItemListText from './ItemListText.vue'
 import DataList from './DataList.vue'
 import RestartButton from './RestartButton.vue'
 import ItemListToggle from './ItemListToggle.vue'
+import ItemListSoundIcon from './ItemListSoundIcon.vue'
 
 const gameData = useGameStore()
 </script>
@@ -14,6 +15,7 @@ const gameData = useGameStore()
   <FrameBase>
     <div class="flex flex-col gap-4">
       <DataList>
+        <ItemListSoundIcon />
         <ItemListText>
           <template #title>Tempo</template>
           <template #item>{{ formatTime(gameData.elapsedTime) }}</template>

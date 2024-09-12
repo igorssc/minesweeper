@@ -12,6 +12,7 @@ type RevealAllBombsWithSoundProps = {
   allBombsPositions: Ref<[number, number][]>
   bombsCount: Ref<number>
   isGameOver: Ref<boolean>
+  hasSound: Ref<boolean>
   timeouts: Ref<number[]>
 }
 
@@ -23,6 +24,7 @@ export const revealAllBombsWithSound = ({
   allBombsPositions,
   bombsCount,
   isGameOver,
+  hasSound,
   timeouts
 }: RevealAllBombsWithSoundProps) => {
   const bombSoundHowl = new Howl({
@@ -30,7 +32,7 @@ export const revealAllBombsWithSound = ({
     volume: 0.0015
   })
 
-  bombSoundHowl.play()
+  hasSound.value && bombSoundHowl.play()
 
   revealCell({
     row,
@@ -57,7 +59,7 @@ export const revealAllBombsWithSound = ({
       }
 
       const isBombPlay = bombsCount.value <= 30 ? true : Math.random() < 0.5
-      isBombPlay && bombSoundHowl.play()
+      hasSound.value && isBombPlay && bombSoundHowl.play()
 
       revealCell({
         row: rowSorted,

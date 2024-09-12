@@ -31,6 +31,7 @@ type HandleCellClickProps = {
   minimumClicks: Ref<number>
   allBombsPositions: Ref<[number, number][]>
   timeouts: Ref<number[]>
+  hasSound: Ref<boolean>
   clicksCount: {
     leftCursor: number
     rightCursor: number
@@ -57,6 +58,7 @@ export const handleCellClick = ({
   timeouts,
   performanceMetric,
   minimumClicks,
+  hasSound,
   bombsCount
 }: HandleCellClickProps) => {
   if (isClosed.value) return
@@ -113,6 +115,7 @@ export const handleCellClick = ({
       isGameOver,
       timeouts,
       isClosed,
+      hasSound,
       timerInterval
     })
 
@@ -159,6 +162,7 @@ export const handleCellClick = ({
       rows: numberRows,
       isVictory,
       isClosed,
+      hasSound,
       timerInterval
     })
   }
