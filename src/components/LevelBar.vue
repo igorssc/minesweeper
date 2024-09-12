@@ -3,28 +3,24 @@ import { useGameStore } from '@/stores/game'
 import FrameBase from './FrameBase.vue'
 import LevelButton from './LevelButton.vue'
 import { defaultLevels } from '@/utils/defaultLevels'
+import { LEVEL } from '@/enums/level'
 
 const gameData = useGameStore()
 
 const levels = defaultLevels
 
-const availableLevels = Object.keys(levels) as Array<keyof typeof levels>
-
-const handleLevel = (level: keyof typeof levels) => {
-  const levelSelected = levels[level]
-
-  gameData.rows = levelSelected.rows
-  gameData.columns = levelSelected.columns
-  gameData.bombs = levelSelected.bombs
-
-  gameData.init()
-}
+const availableLevels = LEVEL
 </script>
 
 <template>
   <FrameBase>
     <div class="flex justify-around w-full">
-      <LevelButton v-for="level in availableLevels" :key="level" @click="handleLevel(level)">
+      <LevelButton
+        v-for="level in availableLevels"
+        :key="level"
+        @click="gameData.handleLevel(level)"
+        :active="gameData.level === level"
+      >
         {{ levels[level].label }}
       </LevelButton>
     </div>

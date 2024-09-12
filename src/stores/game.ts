@@ -10,11 +10,15 @@ import { calculateMinimumClicks } from '@/common/calculateMinimumClicks'
 import { handleCellClickFlag } from '@/common/handleCellClickFlag'
 import { handleCellClick } from '@/common/handleCellClick'
 import { stopTimer } from '@/common/stopTimer'
+import { defaultLevels } from '@/utils/defaultLevels'
+import { LEVEL } from '@/enums/level'
+import { handleLevel } from '@/common/handleLevel'
 
 export const useGameStore = defineStore('game', () => {
-  const columns = ref(10)
-  const rows = ref(10)
-  const bombs = ref(1)
+  const level = ref<LEVEL>(LEVEL.BEGINNER)
+  const columns = ref(defaultLevels[LEVEL.BEGINNER].columns)
+  const rows = ref(defaultLevels[LEVEL.BEGINNER].rows)
+  const bombs = ref(defaultLevels[LEVEL.BEGINNER].bombs)
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
   const boardDisplayed = ref<BoardItemProps[][]>([])
@@ -79,7 +83,7 @@ export const useGameStore = defineStore('game', () => {
     })
   }
 
-  const handleClick = ({ row, column }: { row: number; column: number }) =>
+  const handleCellClickFunction = ({ row, column }: { row: number; column: number }) =>
     handleCellClick({
       currentColumn: column,
       currentRow: row,
@@ -101,7 +105,7 @@ export const useGameStore = defineStore('game', () => {
       timeouts
     })
 
-  const handleClickFlag = ({ row, column }: { row: number; column: number }) =>
+  const handleCellClickFlagFunction = ({ row, column }: { row: number; column: number }) =>
     handleCellClickFlag({
       column,
       row,
@@ -110,6 +114,9 @@ export const useGameStore = defineStore('game', () => {
       isClosed: isClosed.value,
       clicksCount: clicksCount
     })
+
+  const handleLevelFunction = (newLevel: LEVEL) =>
+    handleLevel({ bombs, columns, rows, init, level: newLevel, currentLevel: level })
 
   onUnmounted(() => {
     stopTimer(timerInterval)
@@ -122,13 +129,15 @@ export const useGameStore = defineStore('game', () => {
     bombsDisplayed,
     board: boardDisplayed,
     init,
-    handleCellClick: handleClick,
-    handleCellClickFlag: handleClickFlag,
+    handleCellClick: handleCellClickFunction,
+    handleCellClickFlag: handleCellClickFlagFunction,
+    handleLevel: handleLevelFunction,
     stop,
     elapsedTime,
     minimumClicks,
     clicksCount,
     isVictory,
-    isGameOver
+    isGameOver,
+    level
   }
 })
