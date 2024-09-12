@@ -8,12 +8,12 @@ const gameData = useGameStore()
 const handleClick = (row: number, col: number, event: MouseEvent) => {
   event.preventDefault()
 
-  if (event.button === 0) gameData.handleCellClick(row, col)
-  if (event.button === 2) gameData.handleCellClickFlag(row, col)
+  if (event.button === 0) gameData.handleCellClick({ row, column: col })
+  if (event.button === 2) gameData.handleCellClickFlag({ row, column: col })
 }
 
 const handleLongPress = (row: number, col: number) => {
-  gameData.handleCellClickFlag(row, col)
+  gameData.handleCellClickFlag({ row, column: col })
 }
 
 onMounted(() => {
