@@ -21,7 +21,7 @@ export const handleCellClickFlag = ({
   clicksCount,
   isClosed
 }: HandleCellClickFlagProps) => {
-  if (isClosed) return
+  if (isClosed.value) return
 
   const cellValue = boardDisplayed.value[row][column]
 
