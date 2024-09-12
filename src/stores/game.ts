@@ -22,13 +22,14 @@ export const useGameStore = defineStore('game', () => {
   const bombsDisplayed = ref(bombs.value)
   const baseBoard = ref<BoardItemProps[][]>([])
   const boardDisplayed = ref<BoardItemProps[][]>([])
+  const performanceMetric = ref(100)
   const isClosed = ref(true)
   const elapsedTime = ref(0)
   const isFirstClick = ref(true)
   const minimumClicks = ref(0)
   const isVictory = ref(false)
   const isGameOver = ref(false)
-  const hasSafeStart = ref(false)
+  const hasSafeStart = ref(true)
   const allBombsPositions = ref<[number, number][]>([])
   const timerInterval = ref<ReturnType<typeof setInterval> | null>(null)
   const timeouts = ref<number[]>([])
@@ -38,14 +39,11 @@ export const useGameStore = defineStore('game', () => {
     rightCursor: 0
   })
 
-  if (isGameOver.value) {
-    stopAllTimeouts(timeouts)
-  }
-
   const init = () => {
     baseBoard.value = createEmptyBoard({ columns, rows })
     boardDisplayed.value = JSON.parse(JSON.stringify(baseBoard.value))
 
+    performanceMetric.value = 100
     isClosed.value = false
     isFirstClick.value = true
     elapsedTime.value = 0
@@ -56,6 +54,7 @@ export const useGameStore = defineStore('game', () => {
     isGameOver.value = false
 
     stopTimer(timerInterval)
+    stopAllTimeouts(timeouts)
 
     placeBombsOnBoard({
       columns,
@@ -102,7 +101,9 @@ export const useGameStore = defineStore('game', () => {
       bombsCount: bombs,
       clicksCount,
       timerInterval,
-      timeouts
+      timeouts,
+      performanceMetric,
+      minimumClicks
     })
 
   const handleCellClickFlagFunction = ({ row, column }: { row: number; column: number }) =>
@@ -132,12 +133,14 @@ export const useGameStore = defineStore('game', () => {
     handleCellClick: handleCellClickFunction,
     handleCellClickFlag: handleCellClickFlagFunction,
     handleLevel: handleLevelFunction,
+    performanceMetric,
     stop,
     elapsedTime,
     minimumClicks,
     clicksCount,
     isVictory,
     isGameOver,
+    hasSafeStart,
     level
   }
 })

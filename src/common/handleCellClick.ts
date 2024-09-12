@@ -9,6 +9,7 @@ import { startTimer } from './startTimer'
 import { revealAdjacentEmptyCells } from './revealAdjacentEmptyCells'
 import { victory } from './victory'
 import type { Ref } from 'vue'
+import { calculatePerformance } from './calculatePerformance'
 
 type HandleCellClickProps = {
   currentColumn: number
@@ -26,6 +27,8 @@ type HandleCellClickProps = {
   timerInterval: Ref<number | null>
   elapsedTime: Ref<number>
   bombsCount: Ref<number>
+  performanceMetric: Ref<number>
+  minimumClicks: Ref<number>
   allBombsPositions: Ref<[number, number][]>
   timeouts: Ref<number[]>
   clicksCount: {
@@ -52,15 +55,32 @@ export const handleCellClick = ({
   clicksCount,
   allBombsPositions,
   timeouts,
+  performanceMetric,
+  minimumClicks,
   bombsCount
 }: HandleCellClickProps) => {
   if (isClosed.value) return
+
+  const handleCalculatePerformance = () => {
+    performanceMetric.value = calculatePerformance({
+      elapsedTime,
+      bombs: bombsCount,
+      clicksCount,
+      columns: numberColumns,
+      rows: numberRows,
+      baseBoard,
+      boardDisplayed,
+      isVictory,
+      isGameOver,
+      minimumClicks
+    })
+  }
 
   if (isFirstClick.value) {
     startTimer({ elapsedTime, timerInterval })
     isFirstClick.value = false
 
-    if (baseBoard.value[currentRow][currentColumn] === CELL_STATE.BOMB && hasSafeStart) {
+    if (baseBoard.value[currentRow][currentColumn] === CELL_STATE.BOMB && hasSafeStart.value) {
       relocateBomb({
         numberColumns,
         numberRows,
@@ -82,8 +102,8 @@ export const handleCellClick = ({
 
   if (cellValueDisplayed === CELL_STATE.FLAG) return
 
-  if (cellValue === CELL_STATE.BOMB)
-    return gameOver({
+  if (cellValue === CELL_STATE.BOMB) {
+    gameOver({
       column: currentColumn,
       row: currentRow,
       baseBoard,
@@ -95,6 +115,11 @@ export const handleCellClick = ({
       isClosed,
       timerInterval
     })
+
+    handleCalculatePerformance()
+
+    return
+  }
 
   if (cellValue === null) {
     revealAdjacentEmptyCells({
@@ -126,7 +151,7 @@ export const handleCellClick = ({
 
   bombsDisplayed.value = bombsCount.value - flags
 
-  if (checkVictory({ boardDisplayed, bombsCount }))
+  if (checkVictory({ boardDisplayed, bombsCount })) {
     victory({
       baseBoard,
       boardDisplayed,
@@ -136,4 +161,7 @@ export const handleCellClick = ({
       isClosed,
       timerInterval
     })
+  }
+
+  handleCalculatePerformance()
 }
