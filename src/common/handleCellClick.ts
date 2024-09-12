@@ -13,20 +13,20 @@ import type { Ref } from 'vue'
 type HandleCellClickProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
   isClosed: Ref<boolean>
   isVictory: Ref<boolean>
   isGameOver: Ref<boolean>
   isFirstClick: Ref<boolean>
-  hasSafeStart: boolean
+  hasSafeStart: Ref<boolean>
   baseBoard: Ref<BoardItemProps[][]>
-  boardDisplayed: BoardItemProps[][]
+  boardDisplayed: Ref<BoardItemProps[][]>
   bombsDisplayed: Ref<number>
   timerInterval: Ref<number | null>
   elapsedTime: Ref<number>
-  bombsCount: number
-  allBombsPositions: [number, number][]
+  bombsCount: Ref<number>
+  allBombsPositions: Ref<[number, number][]>
   timeouts: Ref<number[]>
   clicksCount: {
     leftCursor: number
@@ -56,7 +56,7 @@ export const handleCellClick = ({
 }: HandleCellClickProps) => {
   if (isClosed.value) return
 
-  if (isFirstClick) {
+  if (isFirstClick.value) {
     startTimer({ elapsedTime, timerInterval })
     isFirstClick.value = false
 
@@ -66,7 +66,7 @@ export const handleCellClick = ({
         numberRows,
         currentColumn,
         currentRow,
-        baseBoard: baseBoard.value
+        baseBoard
       })
       populateMinesweeperBoard({
         baseBoard,
@@ -78,7 +78,7 @@ export const handleCellClick = ({
 
   const cellValue = baseBoard.value[currentRow][currentColumn]
 
-  const cellValueDisplayed = boardDisplayed[currentRow][currentColumn]
+  const cellValueDisplayed = boardDisplayed.value[currentRow][currentColumn]
 
   if (cellValueDisplayed === CELL_STATE.FLAG) return
 
@@ -86,7 +86,7 @@ export const handleCellClick = ({
     return gameOver({
       column: currentColumn,
       row: currentRow,
-      baseBoard: baseBoard.value,
+      baseBoard,
       boardDisplayed,
       allBombsPositions,
       bombsCount,
@@ -98,7 +98,7 @@ export const handleCellClick = ({
 
   if (cellValue === null) {
     revealAdjacentEmptyCells({
-      baseBoard: baseBoard.value,
+      baseBoard,
       boardDisplayed,
       currentColumn,
       currentRow,
@@ -111,7 +111,7 @@ export const handleCellClick = ({
     revealCell({
       row: currentRow,
       column: currentColumn,
-      baseBoard: baseBoard.value,
+      baseBoard,
       boardDisplayed
     })
   }
@@ -123,11 +123,12 @@ export const handleCellClick = ({
     columns: numberColumns,
     boardDisplayed
   })
-  bombsDisplayed.value = bombsCount - flags
+
+  bombsDisplayed.value = bombsCount.value - flags
 
   if (checkVictory({ boardDisplayed, bombsCount }))
     victory({
-      baseBoard: baseBoard.value,
+      baseBoard,
       boardDisplayed,
       columns: numberColumns,
       rows: numberRows,

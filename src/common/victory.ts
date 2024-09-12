@@ -6,11 +6,11 @@ import type { Ref } from 'vue'
 import { stop } from './stop'
 
 type VictoryProps = {
-  columns: number
-  rows: number
+  columns: Ref<number>
+  rows: Ref<number>
   isVictory: Ref<boolean>
-  baseBoard: BoardItemProps[][]
-  boardDisplayed: BoardItemProps[][]
+  baseBoard: Ref<BoardItemProps[][]>
+  boardDisplayed: Ref<BoardItemProps[][]>
   isClosed: Ref<boolean>
   timerInterval: Ref<number | null>
 }
@@ -32,10 +32,10 @@ export const victory = ({
   })
 
   markBombsAsVictory({
-    columns: columns,
-    rows: rows,
-    baseBoard: baseBoard,
-    boardDisplayed: boardDisplayed
+    columns,
+    rows,
+    baseBoard,
+    boardDisplayed
   })
 
   const winnerSoundHowl = new Howl({

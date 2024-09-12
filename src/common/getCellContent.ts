@@ -1,12 +1,13 @@
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { bombsCountAround } from './bombsCountAround'
+import type { Ref } from 'vue'
 
 type GetCellContentProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
-  baseBoard: BoardItemProps[][]
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
 }
 
 export const getCellContent = ({
@@ -16,7 +17,7 @@ export const getCellContent = ({
   numberRows,
   baseBoard
 }: GetCellContentProps): number | null => {
-  if (baseBoard[currentRow][currentColumn] === CELL_STATE.BOMB) return CELL_STATE.BOMB
+  if (baseBoard.value[currentRow][currentColumn] === CELL_STATE.BOMB) return CELL_STATE.BOMB
 
   const adjacentBombs = bombsCountAround({
     currentRow,

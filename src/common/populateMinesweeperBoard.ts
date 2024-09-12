@@ -4,8 +4,8 @@ import { getCellContent } from './getCellContent'
 import type { Ref } from 'vue'
 
 type PopulateMinesweeperBoardProps = {
-  columns: number
-  rows: number
+  columns: Ref<number>
+  rows: Ref<number>
   baseBoard: Ref<BoardItemProps[][]>
 }
 
@@ -14,12 +14,12 @@ export const populateMinesweeperBoard = ({
   rows,
   baseBoard
 }: PopulateMinesweeperBoardProps) => {
-  const newBoard = createEmptyBoard({ columns: columns, rows: rows })
+  const newBoard = createEmptyBoard({ columns, rows })
 
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < columns; col++) {
+  for (let row = 0; row < rows.value; row++) {
+    for (let col = 0; col < columns.value; col++) {
       newBoard[row][col] = getCellContent({
-        baseBoard: baseBoard.value,
+        baseBoard,
         currentColumn: col,
         currentRow: row,
         numberColumns: columns,

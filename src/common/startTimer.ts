@@ -7,6 +7,7 @@ type StartTimerProps = {
 
 export const startTimer = ({ elapsedTime, timerInterval }: StartTimerProps) => {
   if (timerInterval.value) return
+
   timerInterval.value = setInterval(() => {
     elapsedTime.value++
   }, 1000)

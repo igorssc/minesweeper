@@ -1,8 +1,10 @@
+import type { Ref } from 'vue'
+
 type IsWithinBoardBoundsProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
 }
 
 export const isWithinBoardBounds = ({
@@ -11,4 +13,7 @@ export const isWithinBoardBounds = ({
   numberColumns,
   numberRows
 }: IsWithinBoardBoundsProps): boolean =>
-  currentRow >= 0 && currentRow < numberRows && currentColumn >= 0 && currentColumn < numberColumns
+  currentRow >= 0 &&
+  currentRow < numberRows.value &&
+  currentColumn >= 0 &&
+  currentColumn < numberColumns.value

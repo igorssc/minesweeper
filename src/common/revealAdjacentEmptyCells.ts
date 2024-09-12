@@ -2,14 +2,15 @@ import { isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { directionOffsets } from './directionOffsets'
 import { isWithinBoardBounds } from './isWithinBoardBounds'
 import { revealCell } from './revealCell'
+import type { Ref } from 'vue'
 
 type RevealAdjacentEmptyCellsProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
-  baseBoard: BoardItemProps[][]
-  boardDisplayed: BoardItemProps[][]
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
+  boardDisplayed: Ref<BoardItemProps[][]>
 }
 
 export const revealAdjacentEmptyCells = ({
@@ -31,7 +32,7 @@ export const revealAdjacentEmptyCells = ({
 
     visited.add(positionKey)
 
-    if (baseBoard[currentRow][currentCol] !== null) continue
+    if (baseBoard.value[currentRow][currentCol] !== null) continue
 
     revealCell({
       column: currentCol,
@@ -55,20 +56,21 @@ export const revealAdjacentEmptyCells = ({
         continue
 
       if (
-        baseBoard[adjacentRow][adjacentCol] === null &&
+        baseBoard.value[adjacentRow][adjacentCol] === null &&
         !visited.has(`${adjacentRow},${adjacentCol}`)
       ) {
         queue.push([adjacentRow, adjacentCol])
         continue
       }
-      if (isNumberCell(baseBoard[adjacentRow][adjacentCol])) {
-        revealCell({
-          column: adjacentCol,
-          row: adjacentRow,
-          baseBoard: baseBoard,
-          boardDisplayed: boardDisplayed
-        })
-      }
+
+      if (!isNumberCell(baseBoard.value[adjacentRow][adjacentCol])) continue
+
+      revealCell({
+        column: adjacentCol,
+        row: adjacentRow,
+        baseBoard,
+        boardDisplayed
+      })
     }
   }
 }

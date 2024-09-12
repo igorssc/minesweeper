@@ -6,10 +6,10 @@ import { stop } from './stop'
 type GameOverProps = {
   row: number
   column: number
-  baseBoard: BoardItemProps[][]
-  boardDisplayed: BoardItemProps[][]
-  allBombsPositions: [number, number][]
-  bombsCount: number
+  baseBoard: Ref<BoardItemProps[][]>
+  boardDisplayed: Ref<BoardItemProps[][]>
+  allBombsPositions: Ref<[number, number][]>
+  bombsCount: Ref<number>
   isGameOver: Ref<boolean>
   timeouts: Ref<number[]>
   isClosed: Ref<boolean>
@@ -34,6 +34,7 @@ export const gameOver = ({
   })
 
   isGameOver.value = true
+
   revealAllBombsWithSound({
     row,
     column,

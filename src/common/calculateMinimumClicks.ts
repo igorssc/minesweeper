@@ -1,10 +1,12 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import { exploreIsland } from './exploreIsland'
+import { ref } from 'vue'
+import type { Ref } from 'vue'
 
 type CalculateMinimumClicksProps = {
-  rows: number
-  columns: number
-  baseBoard: BoardItemProps[][]
+  rows: Ref<number>
+  columns: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
 }
 
 export const calculateMinimumClicks = ({
@@ -12,46 +14,49 @@ export const calculateMinimumClicks = ({
   columns,
   baseBoard
 }: CalculateMinimumClicksProps): number => {
-  const visited: boolean[][] = Array.from({ length: rows }, () => Array(columns).fill(false))
+  const visited = ref<boolean[][]>(
+    Array.from({ length: rows.value }, () => Array(columns.value).fill(false))
+  )
 
-  const accessibleNumericalCells: boolean[][] = Array.from({ length: rows }, () =>
-    Array(columns).fill(false)
+  const accessibleNumericalCells = ref<boolean[][]>(
+    Array.from({ length: rows.value }, () => Array(columns.value).fill(false))
   )
 
   let islandCount = 0
 
-  // Count the number of distinct safe islands
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < columns; col++) {
-      if (!visited[row][col] && baseBoard[row][col] === null) {
-        exploreIsland({
-          accessibleNumericalCells,
-          visited,
-          baseBoard,
-          currentColumn: col,
-          currentRow: row,
-          numberColumns: columns,
-          numberRows: rows
-        })
-        islandCount += 1
-      }
+  // Contar o número de ilhas seguras distintas
+  for (let row = 0; row < rows.value; row++) {
+    for (let col = 0; col < columns.value; col++) {
+      if (visited.value[row][col] || baseBoard.value[row][col] !== null) continue
+
+      exploreIsland({
+        accessibleNumericalCells,
+        visited,
+        baseBoard,
+        currentColumn: col,
+        currentRow: row,
+        numberColumns: columns,
+        numberRows: rows
+      })
+      islandCount += 1
     }
   }
 
-  // Count the number of non-revealed numerical cells that are not accessible through safe islands
+  // Contar o número de células numéricas não reveladas que não são acessíveis através de ilhas seguras
   let isolatedNumericalCells = 0
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < columns; col++) {
+  for (let row = 0; row < rows.value; row++) {
+    for (let col = 0; col < columns.value; col++) {
       if (
-        baseBoard[row][col] !== null &&
-        baseBoard[row][col] !== CELL_STATE.BOMB &&
-        !accessibleNumericalCells[row][col]
-      ) {
-        isolatedNumericalCells += 1
-      }
+        baseBoard.value[row][col] === null ||
+        baseBoard.value[row][col] === CELL_STATE.BOMB ||
+        accessibleNumericalCells.value[row][col]
+      )
+        continue
+
+      isolatedNumericalCells += 1
     }
   }
 
-  // The minimum number of clicks is the number of islands plus the number of isolated numerical cells
+  // O número mínimo de cliques é o número de ilhas mais o número de células numéricas isoladas
   return islandCount + isolatedNumericalCells
 }

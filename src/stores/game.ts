@@ -43,7 +43,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   const init = () => {
-    baseBoard.value = createEmptyBoard({ columns: columns.value, rows: rows.value })
+    baseBoard.value = createEmptyBoard({ columns, rows })
     boardDisplayed.value = JSON.parse(JSON.stringify(baseBoard.value))
 
     isClosed.value = false
@@ -58,28 +58,28 @@ export const useGameStore = defineStore('game', () => {
     stopTimer(timerInterval)
 
     placeBombsOnBoard({
-      columns: columns.value,
-      rows: rows.value,
-      bombsCount: bombs.value,
-      baseBoard: baseBoard.value
+      columns,
+      rows,
+      bombsCount: bombs,
+      baseBoard
     })
 
     populateMinesweeperBoard({
       baseBoard: baseBoard,
-      columns: columns.value,
-      rows: rows.value
+      columns: columns,
+      rows: rows
     })
 
     minimumClicks.value = calculateMinimumClicks({
-      columns: columns.value,
-      rows: rows.value,
-      baseBoard: baseBoard.value
+      columns: columns,
+      rows: rows,
+      baseBoard: baseBoard
     })
 
     allBombsPositions.value = checkAllBombs({
-      columns: columns.value,
-      rows: rows.value,
-      baseBoard: baseBoard.value
+      columns,
+      rows,
+      baseBoard
     })
   }
 
@@ -87,19 +87,19 @@ export const useGameStore = defineStore('game', () => {
     handleCellClick({
       currentColumn: column,
       currentRow: row,
-      numberColumns: columns.value,
-      numberRows: rows.value,
-      isClosed: isClosed,
-      isVictory: isVictory,
-      isGameOver: isGameOver,
-      isFirstClick: isFirstClick,
-      hasSafeStart: hasSafeStart.value,
-      elapsedTime: elapsedTime,
-      baseBoard: baseBoard,
-      boardDisplayed: boardDisplayed.value,
-      bombsDisplayed: bombsDisplayed,
-      allBombsPositions: allBombsPositions.value,
-      bombsCount: bombs.value,
+      numberColumns: columns,
+      numberRows: rows,
+      isClosed,
+      isVictory,
+      isGameOver,
+      isFirstClick,
+      hasSafeStart,
+      elapsedTime,
+      baseBoard,
+      boardDisplayed,
+      bombsDisplayed,
+      allBombsPositions,
+      bombsCount: bombs,
       clicksCount,
       timerInterval,
       timeouts
@@ -109,10 +109,10 @@ export const useGameStore = defineStore('game', () => {
     handleCellClickFlag({
       column,
       row,
-      boardDisplayed: boardDisplayed.value,
-      bombsDisplayed: bombsDisplayed.value,
-      isClosed: isClosed.value,
-      clicksCount: clicksCount
+      boardDisplayed,
+      bombsDisplayed,
+      isClosed,
+      clicksCount
     })
 
   const handleLevelFunction = (newLevel: LEVEL) =>

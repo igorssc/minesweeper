@@ -7,10 +7,10 @@ import type { Ref } from 'vue'
 type RevealAllBombsWithSoundProps = {
   row: number
   column: number
-  baseBoard: BoardItemProps[][]
-  boardDisplayed: BoardItemProps[][]
-  allBombsPositions: [number, number][]
-  bombsCount: number
+  baseBoard: Ref<BoardItemProps[][]>
+  boardDisplayed: Ref<BoardItemProps[][]>
+  allBombsPositions: Ref<[number, number][]>
+  bombsCount: Ref<number>
   isGameOver: Ref<boolean>
   timeouts: Ref<number[]>
 }
@@ -31,6 +31,7 @@ export const revealAllBombsWithSound = ({
   })
 
   bombSoundHowl.play()
+
   revealCell({
     row,
     column,
@@ -55,7 +56,7 @@ export const revealAllBombsWithSound = ({
         return
       }
 
-      const isBombPlay = bombsCount <= 30 ? true : Math.random() < 0.5
+      const isBombPlay = bombsCount.value <= 30 ? true : Math.random() < 0.5
       isBombPlay && bombSoundHowl.play()
 
       revealCell({

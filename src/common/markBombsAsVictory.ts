@@ -1,10 +1,11 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
+import type { Ref } from 'vue'
 
 type markBombsAsVictoryProps = {
-  rows: number
-  columns: number
-  baseBoard: BoardItemProps[][]
-  boardDisplayed: BoardItemProps[][]
+  rows: Ref<number>
+  columns: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
+  boardDisplayed: Ref<BoardItemProps[][]>
 }
 
 export const markBombsAsVictory = ({
@@ -13,11 +14,11 @@ export const markBombsAsVictory = ({
   baseBoard,
   boardDisplayed
 }: markBombsAsVictoryProps) => {
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < columns; col++) {
-      if (baseBoard[row][col] !== CELL_STATE.BOMB) continue
+  for (let row = 0; row < rows.value; row++) {
+    for (let col = 0; col < columns.value; col++) {
+      if (baseBoard.value[row][col] !== CELL_STATE.BOMB) continue
 
-      boardDisplayed[row][col] = CELL_STATE.FLAG
+      boardDisplayed.value[row][col] = CELL_STATE.FLAG
     }
   }
 }

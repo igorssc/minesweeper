@@ -1,13 +1,14 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import { directionOffsets } from './directionOffsets'
 import { isWithinBoardBounds } from './isWithinBoardBounds'
+import type { Ref } from 'vue'
 
 type BombsCountAroundProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
-  baseBoard: BoardItemProps[][]
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
 }
 
 export const bombsCountAround = ({
@@ -23,17 +24,16 @@ export const bombsCountAround = ({
     const adjacentRow = currentRow + rowOffset
     const adjacentCol = currentColumn + colOffset
 
-    if (
-      !isWithinBoardBounds({
-        numberColumns,
-        numberRows,
-        currentColumn: adjacentCol,
-        currentRow: adjacentRow
-      })
-    )
-      continue
+    const isWithinBounds = isWithinBoardBounds({
+      numberColumns,
+      numberRows,
+      currentColumn: adjacentCol,
+      currentRow: adjacentRow
+    })
 
-    if (baseBoard[adjacentRow][adjacentCol] !== CELL_STATE.BOMB) continue
+    if (!isWithinBounds) continue
+
+    if (baseBoard.value[adjacentRow][adjacentCol] !== CELL_STATE.BOMB) continue
 
     adjacentBombCount++
   }

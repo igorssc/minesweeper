@@ -1,15 +1,16 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import { directionOffsets } from './directionOffsets'
 import { isWithinBoardBounds } from './isWithinBoardBounds'
+import type { Ref } from 'vue'
 
 type ExploreIslandProps = {
   currentColumn: number
   currentRow: number
-  numberColumns: number
-  numberRows: number
-  baseBoard: BoardItemProps[][]
-  visited: boolean[][]
-  accessibleNumericalCells: boolean[][]
+  numberColumns: Ref<number>
+  numberRows: Ref<number>
+  baseBoard: Ref<BoardItemProps[][]>
+  visited: Ref<boolean[][]>
+  accessibleNumericalCells: Ref<boolean[][]>
 }
 
 export const exploreIsland = ({
@@ -25,32 +26,32 @@ export const exploreIsland = ({
 
   while (queue.length > 0) {
     const [currentRow, currentCol] = queue.shift()!
-    if (visited[currentRow][currentCol]) continue
-    visited[currentRow][currentCol] = true
+    if (visited.value[currentRow][currentCol]) continue
+    visited.value[currentRow][currentCol] = true
 
     for (const [rowOffset, colOffset] of directionOffsets) {
       const adjacentRow = currentRow + rowOffset
       const adjacentCol = currentCol + colOffset
       const isWithinBounds = isWithinBoardBounds({
-        currentColumn: adjacentRow,
-        currentRow: adjacentCol,
+        currentColumn: adjacentCol,
+        currentRow: adjacentRow,
         numberColumns,
         numberRows
       })
 
       if (
         isWithinBounds &&
-        !visited[adjacentRow][adjacentCol] &&
-        baseBoard[adjacentRow][adjacentCol] === null
+        !visited.value[adjacentRow][adjacentCol] &&
+        baseBoard.value[adjacentRow][adjacentCol] === null
       ) {
         queue.push([adjacentRow, adjacentCol])
       }
       if (
         isWithinBounds &&
-        baseBoard[adjacentRow][adjacentCol] !== null &&
-        baseBoard[adjacentRow][adjacentCol] !== CELL_STATE.BOMB // Not counting cells with bombs
+        baseBoard.value[adjacentRow][adjacentCol] !== null &&
+        baseBoard.value[adjacentRow][adjacentCol] !== CELL_STATE.BOMB
       ) {
-        accessibleNumericalCells[adjacentRow][adjacentCol] = true
+        accessibleNumericalCells.value[adjacentRow][adjacentCol] = true
       }
     }
   }

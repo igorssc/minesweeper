@@ -54,13 +54,13 @@ const handleBoard = () => {
   </FrameBase>
   <FrameBase v-if="gameData.level === LEVEL.CUSTOMIZE">
     <div class="flex justify-center items-stretch gap-16">
-      <InputNumber :value="columns" @update:modelValue="($event) => (columns = $event)">
+      <InputNumber :value="columns" @update:modelValue="($event) => (columns = +$event)">
         <template #label>Colunas</template>
       </InputNumber>
-      <InputNumber :value="rows" @update:modelValue="($event) => (rows = $event)">
+      <InputNumber :value="rows" @update:modelValue="($event) => (rows = +$event)">
         <template #label>Linhas</template>
       </InputNumber>
-      <InputNumber :value="bombs" @update:modelValue="($event) => (bombs = $event)">
+      <InputNumber :value="bombs" @update:modelValue="($event) => (bombs = +$event)">
         <template #label>Bombas</template>
       </InputNumber>
       <button
