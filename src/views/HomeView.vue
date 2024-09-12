@@ -16,7 +16,7 @@ const gameData = useGameStore()
     <TitleGame />
     <div class="flex flex-col gap-6">
       <LevelBar />
-      <div class="flex gap-6 max-2xl:flex-col-reverse max-2xl:justify-center max-2xl:items-center">
+      <div class="flex gap-6 max-2xl:flex-col-reverse justify-center max-2xl:items-center">
         <GameBoard />
         <ConfettiExplosion :particleCount="200" :force="1" v-if="gameData.isVictory" />
         <GameData />

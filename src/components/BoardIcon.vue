@@ -48,10 +48,10 @@ watch(
   <div
     :class="
       twMerge(
-        'w-8 h-8 p-4 bg-zinc-900 flex justify-center items-center text-yellow-500 font-black',
+        'select-none w-8 h-8 p-4 bg-zinc-900 flex justify-center items-center text-yellow-500 font-black',
         typeof item === 'number' && 'bg-zinc-900/15',
         colorItem[item ?? 'default'],
-        !(gameData.isGameOver || gameData.isVictory) && 'cursor-pointer hover:bg-zinc-900'
+        !(gameData.isGameOver || gameData.isVictory || item) && 'cursor-pointer hover:bg-zinc-800'
       )
     "
   >
