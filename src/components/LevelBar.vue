@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import FrameBase from './FrameBase.vue'
-import LevelButton from './LevelButton.vue'
+import ButtonComponent from './ButtonComponent.vue'
 import { defaultLevels } from '@/utils/defaultLevels'
 import { LEVEL } from '@/enums/level'
 import { computed } from 'vue'
@@ -42,14 +42,14 @@ const handleBoard = () => {
 <template>
   <FrameBase>
     <div class="flex justify-around w-full">
-      <LevelButton
+      <ButtonComponent
         v-for="level in availableLevels"
         :key="level"
         @click="gameData.handleLevel(level)"
         :active="gameData.level === level"
       >
         {{ levels[level].label }}
-      </LevelButton>
+      </ButtonComponent>
     </div>
   </FrameBase>
   <FrameBase v-if="gameData.level === LEVEL.CUSTOMIZE">
@@ -63,12 +63,7 @@ const handleBoard = () => {
       <InputNumber :value="bombs" @update:modelValue="($event) => (bombs = +$event)">
         <template #label>Bombas</template>
       </InputNumber>
-      <button
-        @click="handleBoard"
-        class="bg-zinc-900 hover:bg-zinc-950 border-2 border-transparent px-4 py-2 rounded-sm text-zinc-400 font-medium hover:bg-transparent hover:border-zinc-700"
-      >
-        Alterar
-      </button>
+      <ButtonComponent @click="handleBoard"> Alterar </ButtonComponent>
     </div>
   </FrameBase>
 </template>

@@ -9,7 +9,7 @@ const handleSound = () => {
 </script>
 
 <template>
-  <li class="text-gray-400 ml-auto">
+  <li class="text-gray-900 hover:text-gray-600 dark:text-gray-400 hover:dark:text-gray-500 ml-auto">
     <v-icon
       v-if="gameData.hasSound"
       name="gi-sound-on"

@@ -4,9 +4,10 @@ import { useGameStore } from '@/stores/game'
 import { formatTime } from '@/utils/formatTime'
 import ItemListText from './ItemListText.vue'
 import DataList from './DataList.vue'
-import RestartButton from './RestartButton.vue'
 import ItemListToggle from './ItemListToggle.vue'
-import ItemListSoundIcon from './ItemListSoundIcon.vue'
+import ItemListSound from './ItemListSound.vue'
+import ItemListTheme from './ItemListTheme.vue'
+import ButtonComponent from './ButtonComponent.vue'
 
 const gameData = useGameStore()
 </script>
@@ -15,7 +16,10 @@ const gameData = useGameStore()
   <FrameBase>
     <div class="flex flex-col gap-4">
       <DataList>
-        <ItemListSoundIcon />
+        <div class="flex justify-between items-center">
+          <ItemListTheme />
+          <ItemListSound />
+        </div>
         <ItemListText>
           <template #title>Tempo</template>
           <template #item>{{ formatTime(gameData.elapsedTime) }}</template>
@@ -45,7 +49,7 @@ const gameData = useGameStore()
         </ItemListToggle>
       </DataList>
 
-      <RestartButton />
+      <ButtonComponent @click="gameData.init"> Reiniciar </ButtonComponent>
     </div>
   </FrameBase>
 </template>

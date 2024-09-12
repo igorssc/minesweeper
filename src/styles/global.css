@@ -1,5 +1,8 @@
 @import '../fonts/fonts.css';
 
+body * {
+  @apply transition-all
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

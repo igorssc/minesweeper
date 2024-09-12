@@ -11,7 +11,7 @@ const gameData = useGameStore()
 
 <template>
   <main
-    class="bg-zinc-900 min-h-screen h-full min-w-screen w-full flex flex-col items-center justify-center gap-16 py-16 overflow-y-hidden"
+    class="bg-gray-200 dark:bg-zinc-900 min-h-screen h-full min-w-screen w-full flex flex-col items-center justify-center gap-16 py-16 overflow-y-hidden"
   >
     <TitleGame />
     <div class="flex flex-col gap-6">
