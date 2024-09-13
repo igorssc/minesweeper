@@ -10,6 +10,8 @@ import { revealAdjacentEmptyCells } from './revealAdjacentEmptyCells'
 import { victory } from './victory'
 import type { Ref } from 'vue'
 import { calculatePerformance } from './calculatePerformance'
+import oneNumberSound from '@/assets/audios/one-number.mp3'
+import moreThanOneNumbersSound from '@/assets/audios/more-than-one-numbers.mp3'
 
 type HandleCellClickProps = {
   currentColumn: number
@@ -154,7 +156,9 @@ export const handleCellClick = ({
 
   bombsDisplayed.value = bombsCount.value - flags
 
-  if (checkVictory({ boardDisplayed, bombsCount })) {
+  const isCheckedVictory = checkVictory({ boardDisplayed, bombsCount })
+
+  if (isCheckedVictory) {
     victory({
       baseBoard,
       boardDisplayed,
@@ -166,6 +170,20 @@ export const handleCellClick = ({
       timerInterval
     })
   }
+
+  const OneNumberSoundHowl = new Howl({
+    src: [oneNumberSound],
+    volume: 0.08
+  })
+
+  const moreThanOneNumbersSoundHowl = new Howl({
+    src: [moreThanOneNumbersSound],
+    volume: 0.02
+  })
+
+  if (cellValue !== null && !isCheckedVictory) hasSound.value && OneNumberSoundHowl.play()
+
+  if (cellValue === null && !isCheckedVictory) hasSound.value && moreThanOneNumbersSoundHowl.play()
 
   handleCalculatePerformance()
 }

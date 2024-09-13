@@ -116,6 +116,7 @@ export const useGameStore = defineStore('game', () => {
       boardDisplayed,
       bombsDisplayed,
       isClosed,
+      hasSound,
       clicksCount
     })
 

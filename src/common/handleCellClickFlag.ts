@@ -1,10 +1,12 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import type { Ref } from 'vue'
+import flagSound from '@/assets/audios/flag.mp3'
 
 type HandleCellClickFlagProps = {
   row: number
   column: number
   isClosed: Ref<boolean>
+  hasSound: Ref<boolean>
   boardDisplayed: Ref<BoardItemProps[][]>
   bombsDisplayed: Ref<number>
   clicksCount: {
@@ -19,6 +21,7 @@ export const handleCellClickFlag = ({
   boardDisplayed,
   bombsDisplayed,
   clicksCount,
+  hasSound,
   isClosed
 }: HandleCellClickFlagProps) => {
   if (isClosed.value) return
@@ -26,6 +29,11 @@ export const handleCellClickFlag = ({
   const cellValue = boardDisplayed.value[row][column]
 
   if (bombsDisplayed.value <= CELL_STATE.BOMB && cellValue !== CELL_STATE.FLAG) return
+
+  const flagSoundHowl = new Howl({
+    src: [flagSound],
+    volume: 0.02
+  })
 
   if (cellValue === CELL_STATE.FLAG) {
     boardDisplayed.value[row][column] = null
@@ -36,6 +44,7 @@ export const handleCellClickFlag = ({
 
   if (typeof cellValue === 'number') return
 
+  hasSound.value && flagSoundHowl.play()
   boardDisplayed.value[row][column] = CELL_STATE.FLAG
   bombsDisplayed.value--
   clicksCount.rightCursor++
