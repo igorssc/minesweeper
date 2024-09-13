@@ -22,7 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <FrameBase @contextmenu="(e) => e.preventDefault()" class="gap-1">
+  <FrameBase @contextmenu="(e) => e.preventDefault()" class="!gap-1">
     <div v-for="(row, rowIndex) in gameData.board" :key="rowIndex" class="flex gap-1 w-full">
       <div
         v-for="(item, itemIndex) in row"

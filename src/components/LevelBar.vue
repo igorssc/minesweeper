@@ -83,7 +83,7 @@ onMounted(() => {
 
 <template>
   <FrameBase>
-    <div class="flex justify-around w-full max-2xl:flex-col max-2xl:gap-4">
+    <div class="flex justify-around w-full max-2xl:flex-col max-2xl:gap-4 max-md:gap-2">
       <ButtonComponent
         v-for="level in availableLevels"
         :key="level"
@@ -95,7 +95,9 @@ onMounted(() => {
     </div>
   </FrameBase>
   <FrameBase v-if="gameData.level === LEVEL.CUSTOMIZE">
-    <div class="flex justify-center items-stretch gap-16 w-full max-2xl:flex-col max-2xl:gap-4">
+    <div
+      class="flex justify-center items-stretch w-full max-2xl:flex-col gap-2 md:gap-4 2xl:gap-16"
+    >
       <InputNumber :value="columns" @update:modelValue="($event) => (columns = +$event)">
         <template #label>Colunas</template>
       </InputNumber>
