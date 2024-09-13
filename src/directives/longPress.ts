@@ -7,7 +7,9 @@ interface LongPressOptions {
 interface HTMLElementWithLongPress extends HTMLElement {
   _timeout?: number | null
   _onmouseup?: (e: MouseEvent) => void
+  _ontouchstart?: (e: TouchEvent) => void
   _onmousedown?: (e: MouseEvent) => void
+  _ontouchend?: (e: TouchEvent) => void
   _onclick?: (e: MouseEvent) => void
 }
 
@@ -18,30 +20,42 @@ export function longPress(Vue: App, options: LongPressOptions = { duration: 2000
     beforeMount(el: HTMLElementWithLongPress, binding: DirectiveBinding) {
       el._timeout = null
 
-      el._onmouseup = function () {
+      // Função para limpar o timeout
+      const clearLongPress = () => {
         if (el._timeout) {
           clearTimeout(el._timeout)
           el._timeout = null
         }
       }
 
-      el._onmousedown = function (e: MouseEvent) {
-        // Checa se a função `binding.value` é realmente uma função
+      // Handler para mousedown e touchstart
+      const startLongPress = (e: MouseEvent | TouchEvent) => {
         if (typeof binding.value === 'function') {
           el._timeout = window.setTimeout(() => {
-            // Executa a função com o evento
-            binding.value(e)
+            binding.value(e as MouseEvent)
           }, options.duration)
 
           // Impede a propagação do click
-          el._onclick = function (event: MouseEvent) {
+          el._onclick = (event: MouseEvent) => {
             event.stopImmediatePropagation()
           }
         }
       }
 
+      // Handler para mouseup e touchend
+      const endLongPress = () => {
+        clearLongPress()
+      }
+
+      el._onmousedown = (e: MouseEvent) => startLongPress(e)
+      el._ontouchstart = (e: TouchEvent) => startLongPress(e)
+      el._onmouseup = endLongPress
+      el._ontouchend = endLongPress
+
       el.addEventListener('mousedown', el._onmousedown)
+      el.addEventListener('touchstart', el._ontouchstart)
       document.addEventListener('mouseup', el._onmouseup)
+      document.addEventListener('touchend', el._ontouchend)
 
       // Adiciona o evento de click para garantir que ele seja cancelado quando necessário
       el.addEventListener('click', function (e: MouseEvent) {
@@ -60,8 +74,14 @@ export function longPress(Vue: App, options: LongPressOptions = { duration: 2000
       if (el._onmousedown) {
         el.removeEventListener('mousedown', el._onmousedown)
       }
+      if (el._ontouchstart) {
+        el.removeEventListener('touchstart', el._ontouchstart)
+      }
       if (el._onmouseup) {
         document.removeEventListener('mouseup', el._onmouseup)
+      }
+      if (el._ontouchend) {
+        document.removeEventListener('touchend', el._ontouchend)
       }
     }
   })
