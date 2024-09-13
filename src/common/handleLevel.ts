@@ -1,6 +1,7 @@
-import type { LEVEL } from '@/enums/level'
+import { LEVEL } from '@/enums/level'
 import { defaultLevels } from '@/utils/defaultLevels'
 import type { Ref } from 'vue'
+import { type RouteLocationNormalizedLoadedGeneric, type Router } from 'vue-router'
 
 type HandleLevelProps = {
   rows: Ref<number>
@@ -9,6 +10,8 @@ type HandleLevelProps = {
   level: LEVEL
   currentLevel: Ref<LEVEL>
   init: () => void
+  router: Router
+  route: RouteLocationNormalizedLoadedGeneric
 }
 
 export const handleLevel = ({
@@ -17,8 +20,12 @@ export const handleLevel = ({
   rows,
   init,
   level,
-  currentLevel
+  currentLevel,
+  router,
+  route
 }: HandleLevelProps) => {
+  const existingQuery = { ...route.query }
+
   const levelSelected = defaultLevels[level]
 
   currentLevel.value = level
@@ -26,6 +33,14 @@ export const handleLevel = ({
   rows.value = levelSelected.rows
   columns.value = levelSelected.columns
   bombs.value = levelSelected.bombs
+
+  router.replace({
+    query: {
+      ...existingQuery,
+      level,
+      ...(level !== LEVEL.CUSTOMIZE && { rows: undefined, columns: undefined, bombs: undefined })
+    }
+  })
 
   init()
 }

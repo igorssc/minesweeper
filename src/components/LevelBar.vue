@@ -3,11 +3,16 @@ import { useGameStore } from '@/stores/game'
 import FrameBase from './FrameBase.vue'
 import ButtonComponent from './ButtonComponent.vue'
 import { defaultLevels } from '@/utils/defaultLevels'
-import { LEVEL } from '@/enums/level'
-import { computed } from 'vue'
+import { isValidLevel, LEVEL } from '@/enums/level'
+import { computed, onMounted } from 'vue'
 import InputNumber from './InputNumber.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const gameData = useGameStore()
+const route = useRoute()
+const router = useRouter()
+
+const existingQuery = { ...route.query }
 
 const levels = defaultLevels
 
@@ -33,10 +38,47 @@ const handleBoard = () => {
   gameData.columns = columns.value
 
   const area = rows.value * columns.value
-  gameData.bombs = bombs.value > area ? area : bombs.value
+  const bombsSaved = bombs.value > area ? area : bombs.value
+
+  gameData.bombs = bombsSaved
+
+  router.replace({
+    query: {
+      ...existingQuery,
+      level: LEVEL.CUSTOMIZE,
+      rows: rows.value,
+      columns: columns.value,
+      bombs: bombsSaved
+    }
+  })
 
   gameData.init()
 }
+
+onMounted(() => {
+  const prevLevel = String(route.query.level)
+
+  if (!isValidLevel(prevLevel)) return
+
+  gameData.handleLevel({
+    level: prevLevel,
+    route,
+    router
+  })
+  gameData.init()
+
+  if (prevLevel !== LEVEL.CUSTOMIZE) return
+
+  const rowsQuery = route.query.rows
+  const columnsQuery = route.query.columns
+  const bombsQuery = route.query.bombs
+
+  if (rowsQuery) gameData.rows = +rowsQuery
+  if (columnsQuery) gameData.columns = +columnsQuery
+  if (bombsQuery) gameData.bombs = +bombsQuery
+
+  gameData.init()
+})
 </script>
 
 <template>
@@ -45,7 +87,7 @@ const handleBoard = () => {
       <ButtonComponent
         v-for="level in availableLevels"
         :key="level"
-        @click="gameData.handleLevel(level)"
+        @click="() => gameData.handleLevel({ level, route, router })"
         :active="gameData.level === level"
       >
         {{ levels[level].label }}

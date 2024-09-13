@@ -13,6 +13,7 @@ import { stopTimer } from '@/common/stopTimer'
 import { defaultLevels } from '@/utils/defaultLevels'
 import { LEVEL } from '@/enums/level'
 import { handleLevel } from '@/common/handleLevel'
+import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router'
 
 export const useGameStore = defineStore('game', () => {
   const level = ref<LEVEL>(LEVEL.BEGINNER)
@@ -118,8 +119,16 @@ export const useGameStore = defineStore('game', () => {
       clicksCount
     })
 
-  const handleLevelFunction = (newLevel: LEVEL) =>
-    handleLevel({ bombs, columns, rows, init, level: newLevel, currentLevel: level })
+  const handleLevelFunction = ({
+    level: newLevel,
+    route,
+    router
+  }: {
+    level: LEVEL
+    router: Router
+    route: RouteLocationNormalizedLoadedGeneric
+  }) =>
+    handleLevel({ bombs, columns, rows, init, level: newLevel, currentLevel: level, router, route })
 
   onUnmounted(() => {
     stopTimer(timerInterval)

@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
+import { onMounted } from 'vue'
 
 const gameData = useGameStore()
 
 const handleSound = () => {
   gameData.hasSound = !gameData.hasSound
+
+  localStorage.setItem('hasSound', String(gameData.hasSound))
 }
+
+onMounted(() => {
+  const prevSound = localStorage.getItem('hasSound')
+
+  if (!prevSound) return
+
+  if (prevSound !== 'true' && prevSound !== 'false') return
+
+  gameData.hasSound = JSON.parse(prevSound)
+})
 </script>
 
 <template>
