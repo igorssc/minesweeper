@@ -19,7 +19,7 @@ const handleCheckboxChange = (event: Event) => {
 
 <template>
   <li class="flex gap-2 justify-start items-center">
-    <span class="font-medium text-gray-900 dark:text-gray-300 text-sm">
+    <span class="md:font-medium text-gray-900 dark:text-gray-300 max-md:text-sm">
       <slot name="title" />:
     </span>
     <label class="relative inline-flex items-center cursor-pointer">
