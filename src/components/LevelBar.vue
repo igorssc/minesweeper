@@ -41,7 +41,7 @@ const handleBoard = () => {
 
 <template>
   <FrameBase>
-    <div class="flex justify-around w-full">
+    <div class="flex justify-around w-full max-2xl:flex-col max-2xl:gap-4">
       <ButtonComponent
         v-for="level in availableLevels"
         :key="level"
@@ -53,7 +53,7 @@ const handleBoard = () => {
     </div>
   </FrameBase>
   <FrameBase v-if="gameData.level === LEVEL.CUSTOMIZE">
-    <div class="flex justify-center items-stretch gap-16">
+    <div class="flex justify-center items-stretch gap-16 w-full max-2xl:flex-col max-2xl:gap-4">
       <InputNumber :value="columns" @update:modelValue="($event) => (columns = +$event)">
         <template #label>Colunas</template>
       </InputNumber>

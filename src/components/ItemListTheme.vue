@@ -3,14 +3,12 @@ import { ref, onMounted } from 'vue'
 
 const isDarkTheme = ref(false)
 
-// Função para alternar o tema
 const toggleTheme = () => {
   isDarkTheme.value = !isDarkTheme.value
   document.documentElement.classList.toggle('dark', isDarkTheme.value)
   localStorage.setItem('theme', isDarkTheme.value ? 'dark' : 'light')
 }
 
-// Persistência do tema no localStorage
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
 
