@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import { calculateBombsScore } from './calculateBombsScore'
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
+import { countIslands } from './countIslands'
 
 type PerformanceMetrics = {
   elapsedTime: Ref<number>
@@ -40,6 +41,7 @@ export const calculatePerformance = ({
   const victoryWeight = 0.2
   const lossWeight = 0.1
   const gameOverPenaltyWeight = 0.1
+  const islandBonusWeight = 0.1
 
   // Normalizando as métricas
   const timeScore = Math.max(0, 100 - (elapsedTime.value / maxTime) * 100)
@@ -69,6 +71,19 @@ export const calculatePerformance = ({
     ? Math.max(0, 100 - (100 * (totalNonBombCells - openedCells)) / totalNonBombCells)
     : 0
 
+  // Bônus para ilhas descobertas
+  const discoveredIslands = countIslands({
+    boardDisplayed,
+    numberColumns: columns,
+    numberRows: rows
+  })
+  const maxIslands = countIslands({
+    boardDisplayed,
+    numberColumns: columns,
+    numberRows: rows
+  })
+  const islandBonus = isVictory.value ? (discoveredIslands / maxIslands) * 100 : 0
+
   // Calculando contribuições ponderadas
   const weightedTimeScore = timeScore * timeWeight
   const weightedClickScore = clickScore * clickWeight
@@ -77,8 +92,14 @@ export const calculatePerformance = ({
   const weightedVictoryScore = victoryScore * victoryWeight
   const weightedLossPenalty = lossPenalty * lossWeight
   const weightedGameOverPenalty = efficiencyScore * gameOverPenaltyWeight
+  const weightedIslandBonus = islandBonus * islandBonusWeight
 
-  let totalScore = weightedTimeScore + weightedClickScore + weightedMoveScore + weightedBombsScore
+  let totalScore =
+    weightedTimeScore +
+    weightedClickScore +
+    weightedMoveScore +
+    weightedBombsScore +
+    weightedIslandBonus
 
   if (isVictory.value) totalScore += weightedVictoryScore
   if (isGameOver.value) totalScore -= weightedLossPenalty + weightedGameOverPenalty
