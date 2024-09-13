@@ -49,7 +49,7 @@ watch(
     :class="
       twMerge(
         'select-none w-8 h-8 p-4 bg-gray-600 dark:bg-zinc-900 flex justify-center items-center text-yellow-500 font-black',
-        typeof item === 'number' && 'bg-zinc-200',
+        typeof item === 'number' && 'bg-zinc-200 dark:bg-zinc-900/15',
         colorItem[item ?? 'default'],
         !(gameData.isGameOver || gameData.isVictory || item) &&
           'cursor-pointer hover:bg-gray-400 dark:hover:bg-zinc-800'
