@@ -63,12 +63,12 @@ watch(isHovered, (newVal) => {
     <transition name="fade" mode="out-in">
       <div
         v-if="showTooltip"
-        class="absolute z-20 bottom-6 w-max max-w-60 p-2 text-xs bg-gray-800 text-white rounded shadow-lg"
+        class="absolute z-20 bottom-6 w-max max-w-60 p-2 text-xs bg-gray-800 dark:bg-zinc-600 text-white rounded shadow-lg"
         @mouseover="autoHide ? keepTooltipVisible() : null"
         @mouseleave="autoHide ? hideTooltipImmediately() : hideTooltipWithDelay"
       >
         <div
-          class="absolute -bottom-2 z-10 left-1/2 rounded transform -translate-x-1/2 w-5 h-5 bg-gray-800 rotate-90"
+          class="absolute -bottom-2 z-10 left-1/2 rounded transform -translate-x-1/2 w-5 h-5 bg-gray-800 dark:bg-zinc-600 rotate-90"
         ></div>
         <span class="relative z-20">
           <slot />
