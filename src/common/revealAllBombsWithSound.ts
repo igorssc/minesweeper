@@ -29,7 +29,7 @@ export const revealAllBombsWithSound = ({
 }: RevealAllBombsWithSoundProps) => {
   const bombSoundHowl = new Howl({
     src: [bombSound],
-    volume: 0.005
+    volume: 0.003
   })
 
   hasSound.value && bombSoundHowl.play()
