@@ -15,7 +15,7 @@ const gameData = useGameStore()
 
 <template>
   <FrameBase class="overflow-x-visible">
-    <div class="flex flex-col gap-4 max-2xl:w-full">
+    <div class="flex flex-col gap-2 md:gap-4 max-2xl:w-full">
       <DataList class="max-2xl:flex-col">
         <div class="flex justify-between items-center">
           <ItemListTheme />
