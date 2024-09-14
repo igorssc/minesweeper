@@ -110,7 +110,7 @@ const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
           </ButtonComponent>
         </template>
         <template #information>
-          Você pode acionar a dica a cada 5 jogadas. Faltam: ({{ COUNT_TIPS - gameData.clicksTip }})
+          Você pode acionar a dica a cada 5 jogadas. Faltam: {{ COUNT_TIPS - gameData.clicksTip }}
           jogadas.
         </template>
       </TooltipComponent>
