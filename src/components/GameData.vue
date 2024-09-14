@@ -9,8 +9,13 @@ import ItemListSound from './ItemListSound.vue'
 import ItemListTheme from './ItemListTheme.vue'
 import ButtonComponent from './ButtonComponent.vue'
 import TooltipIcon from './TooltipIcon.vue'
+import { computed } from 'vue'
 
 const gameData = useGameStore()
+
+const isEndGame = computed(() => gameData.isGameOver || gameData.isVictory)
+
+const hasTip = computed(() => gameData.clicksTip >= 5)
 </script>
 
 <template>
@@ -71,6 +76,13 @@ const gameData = useGameStore()
         </ItemListToggle>
       </DataList>
 
+      <ButtonComponent
+        @click="gameData.handleTip"
+        :emphasis="hasTip && !isEndGame"
+        :disabled="!hasTip || isEndGame"
+      >
+        Dica 💡
+      </ButtonComponent>
       <ButtonComponent @click="gameData.init"> Reiniciar </ButtonComponent>
     </div>
   </FrameBase>

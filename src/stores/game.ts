@@ -14,9 +14,11 @@ import { defaultLevels } from '@/utils/defaultLevels'
 import { LEVEL } from '@/enums/level'
 import { handleLevel } from '@/common/handleLevel'
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router'
+import { handleTip } from '@/common/handleTip'
 
 export const useGameStore = defineStore('game', () => {
   const level = ref<LEVEL>(LEVEL.BEGINNER)
+  const clicksTip = ref(0)
   const columns = ref(defaultLevels[LEVEL.BEGINNER].columns)
   const rows = ref(defaultLevels[LEVEL.BEGINNER].rows)
   const bombs = ref(defaultLevels[LEVEL.BEGINNER].bombs)
@@ -46,6 +48,7 @@ export const useGameStore = defineStore('game', () => {
     boardDisplayed.value = JSON.parse(JSON.stringify(baseBoard.value))
 
     performanceMetric.value = 100
+    clicksTip.value = 0
     isClosed.value = false
     isFirstClick.value = true
     elapsedTime.value = 0
@@ -106,6 +109,7 @@ export const useGameStore = defineStore('game', () => {
       timeouts,
       performanceMetric,
       minimumClicks,
+      clicksTip,
       hasSound
     })
 
@@ -118,6 +122,17 @@ export const useGameStore = defineStore('game', () => {
       isClosed,
       hasSound,
       clicksCount
+    })
+
+  const handleTipFunction = () =>
+    handleTip({
+      allBombsPositions,
+      boardDisplayed,
+      bombsDisplayed,
+      isClosed,
+      hasSound,
+      clicksCount,
+      clicksTip
     })
 
   const handleLevelFunction = ({
@@ -146,6 +161,7 @@ export const useGameStore = defineStore('game', () => {
     handleCellClick: handleCellClickFunction,
     handleCellClickFlag: handleCellClickFlagFunction,
     handleLevel: handleLevelFunction,
+    handleTip: handleTipFunction,
     performanceMetric,
     stop,
     elapsedTime,
@@ -155,6 +171,7 @@ export const useGameStore = defineStore('game', () => {
     isGameOver,
     hasSound,
     hasSafeStart,
-    level
+    level,
+    clicksTip
   }
 })

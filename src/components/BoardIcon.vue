@@ -104,12 +104,26 @@ const handleOpenCellClick = () => {
 
 function vibrateEffect() {
   const element = document.querySelector(`[data-row="${props.row}"][data-col="${props.column}"]`)
-  if (element) {
-    element.classList.add('vibrate')
-    setTimeout(() => {
-      element.classList.remove('vibrate')
-    }, 500)
-  }
+
+  if (!element) return
+
+  element.classList.add('vibrate')
+
+  setTimeout(() => {
+    element.classList.remove('vibrate')
+  }, 500)
+}
+
+function tipEffect() {
+  const element = document.querySelector(`[data-row="${props.row}"][data-col="${props.column}"]`)
+
+  if (!element) return
+
+  element.classList.add('tip')
+
+  setTimeout(() => {
+    element?.classList.remove('tip')
+  }, 1500)
 }
 
 onMounted(() => {
@@ -118,10 +132,17 @@ onMounted(() => {
       vibrateEffect()
     }
   })
+
+  eventBus.on('tip', ({ row, column }) => {
+    if (row === props.row && column === props.column) {
+      tipEffect()
+    }
+  })
 })
 
 onBeforeUnmount(() => {
   eventBus.off('vibrate')
+  eventBus.off('tip')
 })
 
 watch(
@@ -176,6 +197,10 @@ updateAvailableFieldsAround()
 .vibrate {
   animation: vibrate 0.8s ease-in-out;
 }
+.tip {
+  animation: vibrate-tip 1.5s infinite linear;
+  @apply !bg-purple-600 dark:!bg-purple-950;
+}
 
 @keyframes vibrate {
   0% {
@@ -192,6 +217,29 @@ updateAvailableFieldsAround()
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+@keyframes vibrate-tip {
+  0% {
+    transform: rotate(0deg);
+    scale: 1;
+  }
+  25% {
+    transform: rotate(15deg);
+    scale: 1.1;
+  }
+  50% {
+    transform: rotate(0deg);
+    scale: 1;
+  }
+  75% {
+    transform: rotate(-15deg);
+    scale: 1.1;
+  }
+  100% {
+    transform: rotate(0deg);
+    scale: 1;
   }
 }
 </style>
