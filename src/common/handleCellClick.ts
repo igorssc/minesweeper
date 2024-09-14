@@ -70,7 +70,9 @@ export const handleCellClick = ({
   if (isClosed.value) return
 
   const handleCalculatePerformance = () => {
-    performanceMetric.value = calculatePerformance({
+    const prevPerformance = performanceMetric.value
+
+    const newPerformance = calculatePerformance({
       elapsedTime,
       bombs: bombsCount,
       clicksCount,
@@ -82,6 +84,8 @@ export const handleCellClick = ({
       isGameOver,
       minimumClicks
     })
+
+    performanceMetric.value = (prevPerformance + newPerformance) / 2
   }
 
   if (isFirstClick.value) {
