@@ -8,14 +8,17 @@ import ItemListToggle from './ItemListToggle.vue'
 import ItemListSound from './ItemListSound.vue'
 import ItemListTheme from './ItemListTheme.vue'
 import ButtonComponent from './ButtonComponent.vue'
-import TooltipIcon from './TooltipIcon.vue'
+import TooltipComponent from './TooltipComponent.vue'
 import { computed } from 'vue'
+import InformationIcon from './InformationIcon.vue'
 
 const gameData = useGameStore()
 
 const isEndGame = computed(() => gameData.isGameOver || gameData.isVictory)
 
-const hasTip = computed(() => gameData.clicksTip >= 5)
+const COUNT_TIPS = 5
+
+const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
 </script>
 
 <template>
@@ -34,19 +37,29 @@ const hasTip = computed(() => gameData.clicksTip >= 5)
           <template #title>Bombas</template>
           <template #item>{{ gameData.bombsDisplayed }}</template>
           <template #tooltip>
-            <TooltipIcon :auto-hide="true">
-              Quantidade total de bombas ({{ gameData.bombs }}), menos a quantidade de bandeiras
-              adicionadas.
-            </TooltipIcon>
+            <TooltipComponent :auto-hide="true">
+              <template #icon>
+                <InformationIcon />
+              </template>
+              <template #information>
+                Quantidade total de bombas ({{ gameData.bombs }}), menos a quantidade de bandeiras
+                adicionadas.
+              </template>
+            </TooltipComponent>
           </template>
         </ItemListText>
         <ItemListText>
           <template #title>Jogadas mínimas</template>
           <template #item>{{ gameData.minimumClicks }}</template>
           <template #tooltip>
-            <TooltipIcon :auto-hide="true">
-              Quantidade mínima de jogadas para vencer a partida.
-            </TooltipIcon>
+            <TooltipComponent :auto-hide="true">
+              <template #icon>
+                <InformationIcon />
+              </template>
+              <template #information>
+                Quantidade mínima de jogadas para vencer a partida.
+              </template>
+            </TooltipComponent>
           </template>
         </ItemListText>
         <ItemListText>
@@ -57,9 +70,14 @@ const hasTip = computed(() => gameData.clicksTip >= 5)
           <template #title>Cliques (mouse direito)</template>
           <template #item>{{ gameData.clicksCount.rightCursor }}</template>
           <template #tooltip>
-            <TooltipIcon :auto-hide="true">
-              Pode-se usar também o clique longo para adicionar as bandeiras.
-            </TooltipIcon>
+            <TooltipComponent :auto-hide="true">
+              <template #icon>
+                <InformationIcon />
+              </template>
+              <template #information>
+                Pode-se usar também o clique longo para adicionar as bandeiras.
+              </template>
+            </TooltipComponent>
           </template>
         </ItemListText>
         <ItemListText>
@@ -69,20 +87,33 @@ const hasTip = computed(() => gameData.clicksTip >= 5)
         <ItemListToggle>
           <template #title>Início Seguro</template>
           <template #tooltip>
-            <TooltipIcon :auto-hide="true">
-              Iniciar o jogo sempre por uma casa válida, afim de evitar minas na primeira jogada.
-            </TooltipIcon>
+            <TooltipComponent :auto-hide="true">
+              <template #icon>
+                <InformationIcon />
+              </template>
+              <template #information>
+                Iniciar o jogo sempre por uma casa válida, afim de evitar minas na primeira jogada.
+              </template>
+            </TooltipComponent>
           </template>
         </ItemListToggle>
       </DataList>
 
-      <ButtonComponent
-        @click="gameData.handleTip"
-        :emphasis="hasTip && !isEndGame"
-        :disabled="!hasTip || isEndGame"
-      >
-        Dica 💡
-      </ButtonComponent>
+      <TooltipComponent :auto-hide="true" isButton :visible="!hasTip">
+        <template #icon>
+          <ButtonComponent
+            @click="gameData.handleTip"
+            :emphasis="hasTip && !isEndGame"
+            :disabled="!hasTip || isEndGame"
+          >
+            Dica 💡
+          </ButtonComponent>
+        </template>
+        <template #information>
+          Você pode acionar a dica a cada 5 jogadas. Faltam: ({{ COUNT_TIPS - gameData.clicksTip }})
+          jogadas.
+        </template>
+      </TooltipComponent>
       <ButtonComponent @click="gameData.init"> Reiniciar </ButtonComponent>
     </div>
   </FrameBase>
