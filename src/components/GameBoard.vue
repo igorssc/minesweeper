@@ -5,13 +5,6 @@ import { onMounted } from 'vue'
 import FrameBase from './FrameBase.vue'
 const gameData = useGameStore()
 
-const handleClick = (row: number, col: number, event: MouseEvent) => {
-  event.preventDefault()
-
-  if (event.button === 0) gameData.handleCellClick({ row, column: col })
-  if (event.button === 2) gameData.handleCellClickFlag({ row, column: col })
-}
-
 const handleLongPress = (row: number, col: number) => {
   gameData.handleCellClickFlag({ row, column: col })
 }
@@ -24,13 +17,13 @@ onMounted(() => {
 <template>
   <FrameBase @contextmenu="(e) => e.preventDefault()" class="!gap-1">
     <div v-for="(row, rowIndex) in gameData.board" :key="rowIndex" class="flex gap-1 w-full">
-      <div
-        v-for="(item, itemIndex) in row"
-        :key="rowIndex + '-' + itemIndex"
-        @click="handleClick(rowIndex, itemIndex, $event)"
-        @contextmenu="handleClick(rowIndex, itemIndex, $event)"
-      >
-        <BoardIcon :item="item" v-long-press="() => handleLongPress(rowIndex, itemIndex)" />
+      <div v-for="(item, columnIndex) in row" :key="rowIndex + '-' + columnIndex">
+        <BoardIcon
+          :item="item"
+          :row="rowIndex"
+          :column="columnIndex"
+          v-long-press="() => handleLongPress(rowIndex, columnIndex)"
+        />
       </div>
     </div>
   </FrameBase>

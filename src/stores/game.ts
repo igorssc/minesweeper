@@ -141,6 +141,7 @@ export const useGameStore = defineStore('game', () => {
     bombs,
     bombsDisplayed,
     board: boardDisplayed,
+    baseBoard,
     init,
     handleCellClick: handleCellClickFunction,
     handleCellClickFlag: handleCellClickFlagFunction,

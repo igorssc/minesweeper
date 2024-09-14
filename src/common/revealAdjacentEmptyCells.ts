@@ -25,25 +25,25 @@ export const revealAdjacentEmptyCells = ({
   const visited = new Set<string>()
 
   while (queue.length > 0) {
-    const [currentRow, currentCol] = queue.shift()!
-    const positionKey = `${currentRow},${currentCol}`
+    const [currentRowQueue, currentColQueue] = queue.shift()!
+    const positionKey = `${currentRowQueue},${currentColQueue}`
 
     if (visited.has(positionKey)) continue
 
     visited.add(positionKey)
 
-    if (baseBoard.value[currentRow][currentCol] !== null) continue
+    if (baseBoard.value[currentRowQueue][currentColQueue] !== null) continue
 
     revealCell({
-      column: currentCol,
-      row: currentRow,
+      column: currentColQueue,
+      row: currentRowQueue,
       baseBoard,
       boardDisplayed
     })
 
     for (const [rowOffset, colOffset] of directionOffsets) {
-      const adjacentRow = currentRow + rowOffset
-      const adjacentCol = currentCol + colOffset
+      const adjacentRow = currentRowQueue + rowOffset
+      const adjacentCol = currentColQueue + colOffset
 
       if (
         !isWithinBoardBounds({
