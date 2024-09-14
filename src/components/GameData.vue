@@ -99,7 +99,12 @@ const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
         </ItemListToggle>
       </DataList>
 
-      <TooltipComponent :auto-hide="true" isButton :visible="!hasTip">
+      <TooltipComponent
+        :auto-hide="true"
+        isButton
+        :visible="!hasTip && !isEndGame"
+        class="relative"
+      >
         <template #icon>
           <ButtonComponent
             @click="gameData.handleTip"
@@ -114,7 +119,7 @@ const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
           jogadas.
         </template>
       </TooltipComponent>
-      <ButtonComponent @click="gameData.init"> Reiniciar </ButtonComponent>
+      <ButtonComponent @click="gameData.init" class="z-10"> Reiniciar </ButtonComponent>
     </div>
   </FrameBase>
 </template>
