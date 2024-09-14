@@ -44,9 +44,6 @@ export const useGameStore = defineStore('game', () => {
   })
 
   const init = () => {
-    baseBoard.value = createEmptyBoard({ columns, rows })
-    boardDisplayed.value = JSON.parse(JSON.stringify(baseBoard.value))
-
     performanceMetric.value = 100
     clicksTip.value = 0
     isClosed.value = false
@@ -60,6 +57,13 @@ export const useGameStore = defineStore('game', () => {
 
     stopTimer(timerInterval)
     stopAllTimeouts(timeouts)
+
+    createBoard()
+  }
+
+  const createBoard = () => {
+    baseBoard.value = createEmptyBoard({ columns, rows })
+    boardDisplayed.value = JSON.parse(JSON.stringify(baseBoard.value))
 
     placeBombsOnBoard({
       columns,
@@ -95,6 +99,7 @@ export const useGameStore = defineStore('game', () => {
       numberRows: rows,
       isClosed,
       isVictory,
+      createBoard,
       isGameOver,
       isFirstClick,
       hasSafeStart,

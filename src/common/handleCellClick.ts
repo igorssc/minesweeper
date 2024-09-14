@@ -1,6 +1,4 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
-import { populateMinesweeperBoard } from './populateMinesweeperBoard'
-import { relocateBomb } from './relocateBomb'
 import { countFlags } from './countFlags'
 import { checkVictory } from './checkVictory'
 import { revealCell } from './revealCell'
@@ -12,6 +10,8 @@ import type { Ref } from 'vue'
 import { calculatePerformance } from './calculatePerformance'
 import oneNumberSound from '@/assets/audios/one-number.mp3'
 import moreThanOneNumbersSound from '@/assets/audios/more-than-one-numbers.mp3'
+import { relocateBomb } from './relocateBomb'
+import { populateMinesweeperBoard } from './populateMinesweeperBoard'
 
 type HandleCellClickProps = {
   currentColumn: number
@@ -34,6 +34,7 @@ type HandleCellClickProps = {
   allBombsPositions: Ref<[number, number][]>
   timeouts: Ref<number[]>
   clicksTip: Ref<number>
+  createBoard: () => void
   hasSound: Ref<boolean>
   clicksCount: {
     leftCursor: number
@@ -62,6 +63,7 @@ export const handleCellClick = ({
   performanceMetric,
   minimumClicks,
   hasSound,
+  createBoard,
   clicksTip,
   bombsCount
 }: HandleCellClickProps) => {
@@ -86,20 +88,30 @@ export const handleCellClick = ({
     startTimer({ elapsedTime, timerInterval })
     isFirstClick.value = false
 
-    if (baseBoard.value[currentRow][currentColumn] === CELL_STATE.BOMB && hasSafeStart.value) {
-      relocateBomb({
-        numberColumns,
-        numberRows,
-        currentColumn,
-        currentRow,
-        baseBoard
-      })
-      populateMinesweeperBoard({
-        baseBoard,
-        columns: numberColumns,
-        rows: numberRows
-      }) // Atualiza o board após realocar a bomba
+    const hasEmptyCeil = baseBoard.value.flat().some((ceil) => ceil === null)
+
+    if (hasEmptyCeil) {
+      while (baseBoard.value[currentRow][currentColumn] !== null && hasSafeStart.value) {
+        createBoard()
+      }
     }
+
+    if (!hasEmptyCeil)
+      if (baseBoard.value[currentRow][currentColumn] === CELL_STATE.BOMB && hasSafeStart.value) {
+        relocateBomb({
+          numberColumns,
+          numberRows,
+          currentColumn,
+          currentRow,
+          allBombsPositions,
+          baseBoard
+        })
+        populateMinesweeperBoard({
+          baseBoard,
+          columns: numberColumns,
+          rows: numberRows
+        })
+      }
   }
 
   const cellValue = baseBoard.value[currentRow][currentColumn]
