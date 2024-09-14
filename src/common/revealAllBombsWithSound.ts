@@ -52,23 +52,28 @@ export const revealAllBombsWithSound = ({
 
     const delay = index * 50
 
-    const loop = setTimeout(() => {
-      if (!isGameOver.value) {
-        clearTimeout(loop)
-        return
-      }
+    const area = baseBoard.value.length * baseBoard.value[0].length
 
-      const isBombPlay = bombsCount.value <= 30 ? true : Math.random() < 0.5
-      hasSound.value && isBombPlay && bombSoundHowl.play()
+    const loop = setTimeout(
+      () => {
+        if (!isGameOver.value) {
+          clearTimeout(loop)
+          return
+        }
 
-      revealCell({
-        row: rowSorted,
-        column: columnSorted,
-        base: CELL_STATE.BOMB,
-        baseBoard,
-        boardDisplayed
-      })
-    }, delay)
+        const isBombPlay = bombsCount.value <= 30 ? true : Math.random() < 0.5
+        hasSound.value && isBombPlay && bombSoundHowl.play()
+
+        revealCell({
+          row: rowSorted,
+          column: columnSorted,
+          base: CELL_STATE.BOMB,
+          baseBoard,
+          boardDisplayed
+        })
+      },
+      area < 400 ? delay : 0
+    )
 
     timeouts.value.push(loop) // Armazena o ID do timeout
   })
