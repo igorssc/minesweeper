@@ -9,6 +9,7 @@ type HandleCellClickFlagProps = {
   hasSound: Ref<boolean>
   boardDisplayed: Ref<BoardItemProps[][]>
   bombsDisplayed: Ref<number>
+  allFlagsPositions: Ref<[number, number][]>
   clicksCount: {
     leftCursor: number
     rightCursor: number
@@ -22,6 +23,7 @@ export const handleCellClickFlag = ({
   bombsDisplayed,
   clicksCount,
   hasSound,
+  allFlagsPositions,
   isClosed
 }: HandleCellClickFlagProps) => {
   if (isClosed.value) return
@@ -34,6 +36,11 @@ export const handleCellClickFlag = ({
     boardDisplayed.value[row][column] = null
     bombsDisplayed.value++
     clicksCount.rightCursor++
+
+    allFlagsPositions.value.filter(
+      ([flagPositionRow, flagPositionColumn]) =>
+        flagPositionRow !== row && flagPositionColumn !== column
+    )
     return
   }
 
@@ -48,4 +55,6 @@ export const handleCellClickFlag = ({
   boardDisplayed.value[row][column] = CELL_STATE.FLAG
   bombsDisplayed.value--
   clicksCount.rightCursor++
+
+  allFlagsPositions.value.push([row, column])
 }

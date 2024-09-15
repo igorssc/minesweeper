@@ -114,6 +114,18 @@ function vibrateEffect() {
   }, 500)
 }
 
+function flagError() {
+  const element = document.querySelector(`[data-row="${props.row}"][data-col="${props.column}"]`)
+
+  if (!element) return
+
+  element.classList.add('vibrate', 'flag-error')
+
+  setTimeout(() => {
+    element.classList.remove('vibrate')
+  }, 500)
+}
+
 function tipEffect() {
   const element = document.querySelector(`[data-row="${props.row}"][data-col="${props.column}"]`)
 
@@ -138,11 +150,18 @@ onMounted(() => {
       tipEffect()
     }
   })
+
+  eventBus.on('flag-error', ({ row, column }) => {
+    if (row === props.row && column === props.column) {
+      flagError()
+    }
+  })
 })
 
 onBeforeUnmount(() => {
   eventBus.off('vibrate')
   eventBus.off('tip')
+  eventBus.off('flag-error')
 })
 
 watch(
@@ -200,6 +219,9 @@ updateAvailableFieldsAround()
 .tip {
   animation: vibrate-tip 1.5s infinite linear;
   @apply !bg-purple-500 dark:!bg-purple-800;
+}
+.flag-error {
+  @apply filter grayscale;
 }
 
 @keyframes vibrate {

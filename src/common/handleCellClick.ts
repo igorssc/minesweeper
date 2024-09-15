@@ -37,6 +37,7 @@ type HandleCellClickProps = {
   createBoard: () => void
   hasSound: Ref<boolean>
   openCeil: Ref<[number, number, number][]>
+  allFlagsPositions: Ref<[number, number][]>
   clicksCount: {
     leftCursor: number
     rightCursor: number
@@ -66,6 +67,7 @@ export const handleCellClick = ({
   hasSound,
   createBoard,
   clicksTip,
+  allFlagsPositions,
   openCeil,
   bombsCount
 }: HandleCellClickProps) => {
@@ -138,6 +140,8 @@ export const handleCellClick = ({
       timeouts,
       isClosed,
       hasSound,
+      openCeil,
+      allFlagsPositions,
       timerInterval
     })
 

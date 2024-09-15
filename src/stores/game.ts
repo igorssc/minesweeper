@@ -34,6 +34,7 @@ export const useGameStore = defineStore('game', () => {
   const isGameOver = ref(false)
   const hasSafeStart = ref(true)
   const allBombsPositions = ref<[number, number][]>([])
+  const allFlagsPositions = ref<[number, number][]>([])
   const timerInterval = ref<ReturnType<typeof setInterval> | null>(null)
   const timeouts = ref<number[]>([])
   const hasSound = ref(true)
@@ -56,6 +57,7 @@ export const useGameStore = defineStore('game', () => {
     isVictory.value = false
     isGameOver.value = false
     openCeil.value = []
+    allFlagsPositions.value = []
 
     stopTimer(timerInterval)
     stopAllTimeouts(timeouts)
@@ -116,6 +118,7 @@ export const useGameStore = defineStore('game', () => {
       timeouts,
       performanceMetric,
       minimumClicks,
+      allFlagsPositions,
       clicksTip,
       openCeil,
       hasSound
@@ -129,7 +132,8 @@ export const useGameStore = defineStore('game', () => {
       bombsDisplayed,
       isClosed,
       hasSound,
-      clicksCount
+      clicksCount,
+      allFlagsPositions
     })
 
   const handleTipFunction = () =>
@@ -143,6 +147,7 @@ export const useGameStore = defineStore('game', () => {
       clicksTip,
       openCeil,
       baseBoard,
+      allFlagsPositions,
       numberColumns: columns,
       numberRows: rows
     })

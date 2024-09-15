@@ -9,12 +9,14 @@ type GameOverProps = {
   baseBoard: Ref<BoardItemProps[][]>
   boardDisplayed: Ref<BoardItemProps[][]>
   allBombsPositions: Ref<[number, number][]>
+  openCeil: Ref<[number, number, number][]>
   bombsCount: Ref<number>
   isGameOver: Ref<boolean>
   timeouts: Ref<number[]>
   isClosed: Ref<boolean>
   hasSound: Ref<boolean>
   timerInterval: Ref<number | null>
+  allFlagsPositions: Ref<[number, number][]>
 }
 
 export const gameOver = ({
@@ -28,6 +30,8 @@ export const gameOver = ({
   timeouts,
   isClosed,
   timerInterval,
+  openCeil,
+  allFlagsPositions,
   hasSound
 }: GameOverProps) => {
   stop({
@@ -46,6 +50,8 @@ export const gameOver = ({
     bombsCount,
     isGameOver,
     timeouts,
+    openCeil,
+    allFlagsPositions,
     hasSound
   })
 }

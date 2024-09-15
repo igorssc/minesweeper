@@ -3,6 +3,7 @@ import { revealCell } from './revealCell'
 import { sortBombsRadially } from './sortBombsRadially'
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import type { Ref } from 'vue'
+import eventBus from '@/events/eventBus'
 
 type RevealAllBombsWithSoundProps = {
   row: number
@@ -10,10 +11,12 @@ type RevealAllBombsWithSoundProps = {
   baseBoard: Ref<BoardItemProps[][]>
   boardDisplayed: Ref<BoardItemProps[][]>
   allBombsPositions: Ref<[number, number][]>
+  openCeil: Ref<[number, number, number][]>
   bombsCount: Ref<number>
   isGameOver: Ref<boolean>
   hasSound: Ref<boolean>
   timeouts: Ref<number[]>
+  allFlagsPositions: Ref<[number, number][]>
 }
 
 export const revealAllBombsWithSound = ({
@@ -22,9 +25,11 @@ export const revealAllBombsWithSound = ({
   baseBoard,
   boardDisplayed,
   allBombsPositions,
+  allFlagsPositions,
   bombsCount,
   isGameOver,
   hasSound,
+  openCeil,
   timeouts
 }: RevealAllBombsWithSoundProps) => {
   const bombSoundHowl = new Howl({
@@ -38,7 +43,8 @@ export const revealAllBombsWithSound = ({
     row,
     column,
     baseBoard: baseBoard,
-    boardDisplayed: boardDisplayed
+    boardDisplayed: boardDisplayed,
+    openCeil
   })
 
   const sortedBombs = sortBombsRadially({
@@ -69,7 +75,8 @@ export const revealAllBombsWithSound = ({
           column: columnSorted,
           base: CELL_STATE.BOMB,
           baseBoard,
-          boardDisplayed
+          boardDisplayed,
+          openCeil
         })
       },
       area < 400 ? delay : 0
@@ -77,4 +84,10 @@ export const revealAllBombsWithSound = ({
 
     timeouts.value.push(loop) // Armazena o ID do timeout
   })
+
+  for (const [flagPositionRow, flagPositionColumn] of allFlagsPositions.value) {
+    if (baseBoard.value[flagPositionRow][flagPositionColumn] === CELL_STATE.BOMB) continue
+
+    eventBus.emit('flag-error', { row: flagPositionRow, column: flagPositionColumn })
+  }
 }

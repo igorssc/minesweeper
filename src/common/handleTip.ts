@@ -16,6 +16,7 @@ type HandleTipProps = {
   numberColumns: Ref<number>
   numberRows: Ref<number>
   baseBoard: Ref<BoardItemProps[][]>
+  allFlagsPositions: Ref<[number, number][]>
   clicksCount: {
     leftCursor: number
     rightCursor: number
@@ -33,6 +34,7 @@ export const handleTip = ({
   baseBoard,
   numberColumns,
   numberRows,
+  allFlagsPositions,
   isClosed
 }: HandleTipProps) => {
   if (bombsDisplayed.value <= 0) return 0
@@ -76,6 +78,7 @@ export const handleTip = ({
           bombsDisplayed,
           isClosed,
           hasSound,
+          allFlagsPositions,
           clicksCount
         })
       }, 1500)
@@ -103,6 +106,7 @@ export const handleTip = ({
         bombsDisplayed,
         isClosed,
         hasSound,
+        allFlagsPositions,
         clicksCount
       })
     }, 1500)
