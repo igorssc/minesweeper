@@ -175,7 +175,7 @@ updateAvailableFieldsAround()
     :data-col="column"
     :class="
       twMerge(
-        'select-none w-8 h-8 p-4 bg-gray-600 dark:bg-zinc-900 flex justify-center items-center text-yellow-500 font-black',
+        'select-none w-8 h-8 p-4 bg-gray-600 dark:bg-zinc-700 flex justify-center items-center text-yellow-500 font-black',
         typeof item === 'number' && 'bg-zinc-200 dark:bg-zinc-900/15',
         colorItem[item ?? 'default'],
         !isEndGame && availableFieldsAround.ceilsAround.length > 0 && 'cursor-pointer',

@@ -13,7 +13,7 @@ defineProps<{
     :class="
       twMerge(
         'text-gray-900 dark:text-zinc-400 border-2 border-transparent  px-8 py-1 md:py-2 rounded max-md:text-sm',
-        !active && 'shadow-lg bg-gray-200 dark:bg-zinc-900',
+        !active && 'shadow-lg bg-gray-200 dark:bg-zinc-700',
         !active &&
           !disabled &&
           'hover:bg-gray-300 dark:hover:bg-transparent hover:border-gray-600 dark:hover:border-zinc-700',
