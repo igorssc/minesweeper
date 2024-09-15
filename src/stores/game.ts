@@ -37,6 +37,7 @@ export const useGameStore = defineStore('game', () => {
   const timerInterval = ref<ReturnType<typeof setInterval> | null>(null)
   const timeouts = ref<number[]>([])
   const hasSound = ref(true)
+  const openCeil = ref<[number, number, number][]>([])
 
   const clicksCount = reactive({
     leftCursor: 0,
@@ -54,6 +55,7 @@ export const useGameStore = defineStore('game', () => {
     bombsDisplayed.value = bombs.value
     isVictory.value = false
     isGameOver.value = false
+    openCeil.value = []
 
     stopTimer(timerInterval)
     stopAllTimeouts(timeouts)
@@ -115,6 +117,7 @@ export const useGameStore = defineStore('game', () => {
       performanceMetric,
       minimumClicks,
       clicksTip,
+      openCeil,
       hasSound
     })
 
@@ -137,7 +140,11 @@ export const useGameStore = defineStore('game', () => {
       isClosed,
       hasSound,
       clicksCount,
-      clicksTip
+      clicksTip,
+      openCeil,
+      baseBoard,
+      numberColumns: columns,
+      numberRows: rows
     })
 
   const handleLevelFunction = ({

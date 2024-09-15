@@ -199,7 +199,7 @@ updateAvailableFieldsAround()
 }
 .tip {
   animation: vibrate-tip 1.5s infinite linear;
-  @apply !bg-purple-600 dark:!bg-purple-950;
+  @apply !bg-purple-500 dark:!bg-purple-800;
 }
 
 @keyframes vibrate {

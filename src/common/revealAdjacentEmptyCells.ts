@@ -11,6 +11,7 @@ type RevealAdjacentEmptyCellsProps = {
   numberRows: Ref<number>
   baseBoard: Ref<BoardItemProps[][]>
   boardDisplayed: Ref<BoardItemProps[][]>
+  openCeil: Ref<[number, number, number][]>
 }
 
 export const revealAdjacentEmptyCells = ({
@@ -19,6 +20,7 @@ export const revealAdjacentEmptyCells = ({
   currentColumn,
   currentRow,
   numberColumns,
+  openCeil,
   numberRows
 }: RevealAdjacentEmptyCellsProps) => {
   const queue: [number, number][] = [[currentRow, currentColumn]]
@@ -38,7 +40,8 @@ export const revealAdjacentEmptyCells = ({
       column: currentColQueue,
       row: currentRowQueue,
       baseBoard,
-      boardDisplayed
+      boardDisplayed,
+      openCeil
     })
 
     for (const [rowOffset, colOffset] of directionOffsets) {
@@ -69,7 +72,8 @@ export const revealAdjacentEmptyCells = ({
         column: adjacentCol,
         row: adjacentRow,
         baseBoard,
-        boardDisplayed
+        boardDisplayed,
+        openCeil
       })
     }
   }

@@ -18,7 +18,7 @@ export const checkBombsAround = ({
   numberRows,
   baseBoard
 }: CheckBombsAroundProps) => {
-  let bombsAround = 0
+  const bombsAround = []
 
   const currentCeil = baseBoard.value[currentRow][currentColumn]
 
@@ -38,9 +38,9 @@ export const checkBombsAround = ({
     )
       continue
 
-    if (baseBoard.value[adjacentRow][adjacentCol] !== CELL_STATE.BOMB) return
+    if (baseBoard.value[adjacentRow][adjacentCol] !== CELL_STATE.BOMB) continue
 
-    ++bombsAround
+    bombsAround.push([adjacentRow, adjacentCol])
   }
 
   return bombsAround
