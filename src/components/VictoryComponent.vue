@@ -8,8 +8,12 @@ const gameData = useGameStore()
 const showVictoryConfetti = ref(false)
 const confettiLoops = ref([false, false, false, false])
 
+const intervalIds = ref<number[]>([])
+
 const loop = (index: number, time: number) => {
   const intervalId = setInterval(() => {
+    intervalIds.value.push(intervalId)
+
     if (!gameData.isVictory) {
       confettiLoops.value[index] = false
       clearInterval(intervalId)
@@ -34,7 +38,7 @@ watch(
     showVictoryConfetti.value = true
     setTimeout(() => {
       showVictoryConfetti.value = false
-    }, 2000)
+    }, 3000)
   },
   { immediate: true }
 )
@@ -44,13 +48,18 @@ watch(
   (isVictory) => {
     if (!isVictory) {
       confettiLoops.value = [false, false, false, false]
+
+      intervalIds.value.forEach((intervalId) => clearInterval(intervalId))
+
       return
     }
 
-    loop(0, 1500)
-    loop(1, 2000)
-    loop(2, 2800)
-    loop(3, 3500)
+    setTimeout(() => {
+      loop(0, 1500)
+      loop(1, 2000)
+      loop(2, 2800)
+      loop(3, 3500)
+    }, 2000)
   },
   { immediate: true }
 )
