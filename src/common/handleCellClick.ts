@@ -28,6 +28,7 @@ type HandleCellClickProps = {
   bombsDisplayed: Ref<number>
   timerInterval: Ref<number | null>
   elapsedTime: Ref<number>
+  timeForTip: Ref<number>
   bombsCount: Ref<number>
   performanceMetric: Ref<number>
   minimumClicks: Ref<number>
@@ -54,6 +55,7 @@ export const handleCellClick = ({
   isGameOver,
   isFirstClick,
   hasSafeStart,
+  timeForTip,
   elapsedTime,
   timerInterval,
   baseBoard,
@@ -103,7 +105,7 @@ export const handleCellClick = ({
   }
 
   if (isFirstClick.value) {
-    startTimer({ elapsedTime, timerInterval })
+    startTimer({ elapsedTime, timerInterval, timeForTip })
     isFirstClick.value = false
 
     const hasEmptyCeil = baseBoard.value.flat().some((ceil) => ceil === null)

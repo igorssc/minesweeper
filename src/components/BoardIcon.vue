@@ -60,6 +60,7 @@ function updateAvailableFieldsAround() {
 
 const handleClick = (row: number, col: number, event: MouseEvent) => {
   event.preventDefault()
+  updateAvailableFieldsAround()
 
   if (gameData.isGameOver || gameData.isVictory) return
 
@@ -79,6 +80,8 @@ const handleOpenCellClick = () => {
   if (ceilsAround.length <= 0) return
 
   if (!isNumberCell(currentCeil)) return
+
+  console.log(flagsAround, currentCeil)
 
   if (flagsAround.length >= currentCeil) {
     const hasBombs = ceilsAround.find(

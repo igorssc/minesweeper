@@ -12,6 +12,7 @@ type HandleTipProps = {
   isClosed: Ref<boolean>
   hasSound: Ref<boolean>
   clicksTip: Ref<number>
+  timeForTip: Ref<number>
   openCeil: Ref<[number, number, number][]>
   numberColumns: Ref<number>
   numberRows: Ref<number>
@@ -30,6 +31,7 @@ export const handleTip = ({
   clicksCount,
   hasSound,
   clicksTip,
+  timeForTip,
   openCeil,
   baseBoard,
   numberColumns,
@@ -48,7 +50,7 @@ export const handleTip = ({
   const allRandomOpenedPositionWithNumbers = shuffleArray(allOpenedPositionWithNumbers)
 
   for (const [row, column] of allRandomOpenedPositionWithNumbers) {
-    if (clicksTip.value === 0) break
+    if (clicksTip.value === 0 || timeForTip.value === 0) break
 
     const bombsAround = checkBombsAround({
       currentColumn: column,
@@ -69,6 +71,7 @@ export const handleTip = ({
       eventBus.emit('tip', { row: bombPositionRow, column: bombPositionColumn })
 
       clicksTip.value = 0
+      timeForTip.value = 0
 
       setTimeout(() => {
         handleCellClickFlag({

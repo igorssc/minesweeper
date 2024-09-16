@@ -18,7 +18,6 @@ export const revealCell = async ({
   boardDisplayed,
   openCeil
 }: revealCellProps) => {
-  console.log('aq')
   if (typeof boardDisplayed.value[row][column] === 'number') return
 
   const cellValue = baseBoard.value[row][column] ?? CELL_STATE.EMPTY

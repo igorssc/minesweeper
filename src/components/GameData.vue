@@ -11,6 +11,7 @@ import ButtonComponent from './ButtonComponent.vue'
 import TooltipComponent from './TooltipComponent.vue'
 import { computed } from 'vue'
 import InformationIcon from './InformationIcon.vue'
+import RestartModal from './RestartModal.vue'
 
 const gameData = useGameStore()
 
@@ -18,7 +19,9 @@ const isEndGame = computed(() => gameData.isGameOver || gameData.isVictory)
 
 const COUNT_TIPS = 5
 
-const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
+const hasTip = computed(
+  () => gameData.clicksTip >= COUNT_TIPS || gameData.timeForTip >= gameData.timeBaseForTip
+)
 </script>
 
 <template>
@@ -115,11 +118,13 @@ const hasTip = computed(() => gameData.clicksTip >= COUNT_TIPS)
           </ButtonComponent>
         </template>
         <template #information>
-          Você pode acionar a dica a cada 5 jogadas. Faltam: {{ COUNT_TIPS - gameData.clicksTip }}
-          jogadas.
+          Você pode acionar a dica a cada 5 jogadas, ou 5 minutos. Faltam:
+          {{ COUNT_TIPS - gameData.clicksTip }}
+          jogadas, ou {{ formatTime(gameData.timeBaseForTip - gameData.timeForTip) }}.
         </template>
       </TooltipComponent>
       <ButtonComponent @click="gameData.init" class="z-10"> Reiniciar </ButtonComponent>
     </div>
+    <!-- <RestartModal /> -->
   </FrameBase>
 </template>

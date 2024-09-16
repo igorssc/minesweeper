@@ -19,6 +19,7 @@ import { handleTip } from '@/common/handleTip'
 export const useGameStore = defineStore('game', () => {
   const level = ref<LEVEL>(LEVEL.BEGINNER)
   const clicksTip = ref(0)
+  const timeForTip = ref(0)
   const columns = ref(defaultLevels[LEVEL.BEGINNER].columns)
   const rows = ref(defaultLevels[LEVEL.BEGINNER].rows)
   const bombs = ref(defaultLevels[LEVEL.BEGINNER].bombs)
@@ -45,9 +46,12 @@ export const useGameStore = defineStore('game', () => {
     rightCursor: 0
   })
 
+  const timeBaseForTip = 5 * 60
+
   const init = () => {
     performanceMetric.value = 100
     clicksTip.value = 0
+    timeForTip.value = 0
     isClosed.value = false
     isFirstClick.value = true
     elapsedTime.value = 0
@@ -116,6 +120,7 @@ export const useGameStore = defineStore('game', () => {
       clicksCount,
       timerInterval,
       timeouts,
+      timeForTip,
       performanceMetric,
       minimumClicks,
       allFlagsPositions,
@@ -149,7 +154,8 @@ export const useGameStore = defineStore('game', () => {
       baseBoard,
       allFlagsPositions,
       numberColumns: columns,
-      numberRows: rows
+      numberRows: rows,
+      timeForTip
     })
 
   const handleLevelFunction = ({
@@ -182,6 +188,7 @@ export const useGameStore = defineStore('game', () => {
     performanceMetric,
     stop,
     elapsedTime,
+    timeForTip,
     minimumClicks,
     clicksCount,
     isVictory,
@@ -189,6 +196,7 @@ export const useGameStore = defineStore('game', () => {
     hasSound,
     hasSafeStart,
     level,
+    timeBaseForTip,
     clicksTip
   }
 })
