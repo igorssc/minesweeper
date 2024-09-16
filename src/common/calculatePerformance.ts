@@ -29,16 +29,19 @@ export const calculatePerformance = ({
   rows,
   columns
 }: PerformanceMetrics) => {
-  const maxTime = 240 // Máximo de tempo em segundos para um bom desempenho (4 minutos)
+  const area = rows.value * columns.value
+
+  const maxTime = area * 3.5
   const maxClicks = rows.value * columns.value // Máximo teórico de cliques (um por célula)
 
   // Pesos para cada métrica
-  const timeWeight = isVictory.value || isGameOver.value ? 0.2 : 0.25
-  const clickWeight = isVictory.value || isGameOver.value ? 0.2 : 0.25
-  const moveWeight = isVictory.value || isGameOver.value ? 0.2 : 0.25
-  const bombsWeight = isVictory.value || isGameOver.value ? 0.2 : 0.25
+  const timeWeight = 0.1
+  const clickWeight = 0.1
+  const moveWeight = 0.1
+  const bombsWeight = 0.1
   const victoryWeight = 0.1
-  const gameOverPenaltyWeight = 0.1
+  const gameOverPenaltyWeight = 0
+  const efficiencyScoreWeight = 0.8
 
   // Normalizando as métricas
   const timeScore = Math.max(0, 100 - (elapsedTime.value / maxTime) * 100)
@@ -53,17 +56,19 @@ export const calculatePerformance = ({
         (Math.abs(minimumClicks.value - clicksCount.leftCursor) / maxPossibleClicks) * 100
       )
   )
-  const bombsScore = Math.min(calculateBombsScore({ baseBoard, boardDisplayed }), 100)
+
+  const bombsScore = Math.min(100, calculateBombsScore({ baseBoard, boardDisplayed }))
+
   const victoryScore = isVictory.value ? 100 : 0
 
   // Métrica para penalização de game over
   const totalNonBombCells = baseBoard.value.flat().filter((cell) => cell !== CELL_STATE.BOMB).length
+
   const openedCells = boardDisplayed.value
     .flat()
-    .filter((cell) => cell !== CELL_STATE.FLAG && cell !== CELL_STATE.BOMB).length
-  const efficiencyScore = isGameOver.value
-    ? Math.max(0, 100 - (100 * (totalNonBombCells - openedCells)) / totalNonBombCells)
-    : 0
+    .filter((cell) => cell !== CELL_STATE.FLAG && cell !== CELL_STATE.BOMB && cell !== null).length
+
+  const efficiencyScore = Math.min(100, 100 * (openedCells / totalNonBombCells))
 
   // Bônus para ilhas descobertas
   // const discoveredIslands = countIslands({
@@ -86,9 +91,15 @@ export const calculatePerformance = ({
   const weightedMoveScore = moveScore * moveWeight
   const weightedBombsScore = bombsScore * bombsWeight
   const weightedVictoryScore = victoryScore * victoryWeight
-  const weightedGameOverPenalty = efficiencyScore * gameOverPenaltyWeight
+  const weightedGameOverPenalty = gameOverPenaltyWeight
+  const weightedEfficiency = efficiencyScore * efficiencyScoreWeight
 
-  let totalScore = weightedTimeScore + weightedClickScore + weightedMoveScore + weightedBombsScore
+  let totalScore =
+    weightedTimeScore +
+    weightedClickScore +
+    weightedMoveScore +
+    weightedBombsScore +
+    weightedEfficiency
 
   if (isVictory.value) totalScore += weightedVictoryScore
   if (isGameOver.value) totalScore -= weightedGameOverPenalty

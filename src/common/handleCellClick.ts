@@ -89,7 +89,17 @@ export const handleCellClick = ({
       minimumClicks
     })
 
-    performanceMetric.value = (prevPerformance + newPerformance) / 2
+    if (!isFirstClick.value) {
+      const weightPrev = 0.3
+      const weightNew = 0.7
+
+      performanceMetric.value =
+        (prevPerformance * weightPrev + newPerformance * weightNew) / (weightPrev + weightNew)
+
+      return
+    }
+
+    performanceMetric.value = newPerformance
   }
 
   if (isFirstClick.value) {
