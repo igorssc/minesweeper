@@ -1,5 +1,5 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
-import type { Ref } from 'vue'
+import { markRaw, type Ref } from 'vue'
 
 type revealCellProps = {
   row: number
@@ -10,7 +10,7 @@ type revealCellProps = {
   openCeil: Ref<[number, number, number][]>
 }
 
-export const revealCell = ({
+export const revealCell = async ({
   row,
   column,
   base,
@@ -18,10 +18,16 @@ export const revealCell = ({
   boardDisplayed,
   openCeil
 }: revealCellProps) => {
+  console.log('aq')
   if (typeof boardDisplayed.value[row][column] === 'number') return
 
   const cellValue = baseBoard.value[row][column] ?? CELL_STATE.EMPTY
-  boardDisplayed.value[row][column] = base ?? cellValue
+
+  const rawBoardDisplayed = markRaw(boardDisplayed.value)
+
+  rawBoardDisplayed[row][column] = base ?? cellValue
 
   openCeil.value.push([row, column, cellValue])
+
+  boardDisplayed.value = rawBoardDisplayed
 }

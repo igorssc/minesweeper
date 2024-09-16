@@ -56,33 +56,37 @@ export const revealAllBombsWithSound = ({
   sortedBombs.forEach(([rowSorted, columnSorted], index) => {
     if (row === rowSorted && column === columnSorted) return
 
-    const delay = index * 50
-
     const area = baseBoard.value.length * baseBoard.value[0].length
 
-    const loop = setTimeout(
-      () => {
-        if (!isGameOver.value) {
-          clearTimeout(loop)
-          return
-        }
+    const TIME_BASE_DELAY = (area <= 400 ? 1 : 3) * 1000
 
-        const isBombPlay = bombsCount.value <= 30 ? true : Math.random() < 0.5
-        hasSound.value && isBombPlay && bombSoundHowl.play()
+    const delay =
+      TIME_BASE_DELAY / sortedBombs.length + index * (TIME_BASE_DELAY / sortedBombs.length)
 
-        revealCell({
-          row: rowSorted,
-          column: columnSorted,
-          base: CELL_STATE.BOMB,
-          baseBoard,
-          boardDisplayed,
-          openCeil
-        })
-      },
-      area < 400 ? delay : 0
-    )
+    // Usando setTimeout para executar de forma assíncrona e paralela
+    const loop = setTimeout(async () => {
+      if (!isGameOver.value) {
+        clearTimeout(loop)
+        return
+      }
 
-    timeouts.value.push(loop) // Armazena o ID do timeout
+      // Definir aleatoriedade para o som da bomba, dependendo do número de bombas
+      const isBombPlay = bombsCount.value <= 30 || Math.random() < 0.3
+      hasSound.value && isBombPlay && bombSoundHowl.play()
+
+      // Chamar função para revelar a célula
+      revealCell({
+        row: rowSorted,
+        column: columnSorted,
+        base: CELL_STATE.BOMB,
+        baseBoard,
+        boardDisplayed,
+        openCeil
+      })
+    }, delay)
+
+    // Armazena o ID do timeout, se necessário
+    timeouts.value.push(loop)
   })
 
   for (const [flagPositionRow, flagPositionColumn] of allFlagsPositions.value) {

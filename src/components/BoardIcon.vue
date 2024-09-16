@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
-import bombGif from '@/assets/bomb.gif'
+import bombGif from '@/assets/bomb_compressed.gif'
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { checkAvailableFieldsAround } from '@/common/checkAvailableFieldsAround'
@@ -17,10 +17,10 @@ type ColorItem = {
 const colorItem: ColorItem = {
   1: 'text-blue-500',
   2: 'text-green-500',
-  3: 'text-red-500',
+  3: 'text-purple-500',
   4: 'text-pink-500',
   5: 'text-orange-500',
-  6: 'text-purple-500',
+  6: 'text-violet-500',
   7: 'text-yellow-500',
   8: 'text-cyan-500',
   default: ''
