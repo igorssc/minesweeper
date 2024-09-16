@@ -5,6 +5,7 @@ defineProps<{
   active?: boolean
   disabled?: boolean
   emphasis?: boolean
+  className?: string
 }>()
 </script>
 
@@ -19,7 +20,8 @@ defineProps<{
           'hover:bg-gray-300 dark:hover:bg-transparent hover:border-gray-600 dark:hover:border-zinc-700',
         active && 'bg-transparent',
         !disabled && emphasis && 'blink !shadow-purple-600/50 dark:!shadow-purple-700/50',
-        disabled && 'cursor-not-allowed bg-gray-400/50 dark:bg-zinc-800'
+        disabled && 'cursor-not-allowed bg-gray-400/50 dark:bg-zinc-800',
+        className
       )
     "
     :disabled="disabled"

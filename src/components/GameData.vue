@@ -123,8 +123,8 @@ const hasTip = computed(
           jogadas, ou {{ formatTime(gameData.timeBaseForTip - gameData.timeForTip) }}.
         </template>
       </TooltipComponent>
-      <ButtonComponent @click="gameData.init" class="z-10"> Reiniciar </ButtonComponent>
+
+      <RestartModal />
     </div>
-    <!-- <RestartModal /> -->
   </FrameBase>
 </template>

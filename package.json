@@ -21,6 +21,7 @@
     "use-sound": "^4.0.3",
     "vue": "^3.4.29",
     "vue-confetti-explosion": "^1.0.2",
+    "vue-modality-v3": "^2.0.4",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
