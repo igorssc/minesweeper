@@ -33,7 +33,7 @@ const handleRestartGame = () => {
     :hide-footer="true"
     width="600"
   >
-    <div class="py-8">
+    <div class="py-4 md:py-8">
       Reiniciar a partida irá zerar todo o andamento atual. Deseja mesmo prosseguir?
     </div>
 
@@ -46,7 +46,7 @@ const handleRestartGame = () => {
       </ButtonComponent>
       <ButtonComponent
         @click="handleRestartGame"
-        class="dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-400 dark:hover:border-gray-400"
+        class-name="dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-400 dark:hover:border-gray-400"
       >
         Reiniciar
       </ButtonComponent>
@@ -56,7 +56,7 @@ const handleRestartGame = () => {
 
 <style>
 .vue-modality-dialog {
-  @apply bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-gray-300 p-8 rounded-md shadow-lg !h-auto;
+  @apply bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-gray-300 md:p-8 rounded-md shadow-lg !h-auto;
 }
 
 .vm-overlay {
@@ -68,7 +68,7 @@ const handleRestartGame = () => {
 }
 
 .vm-close-btn {
-  @apply dark:after:bg-gray-300 dark:before:bg-gray-300 top-9 right-9;
+  @apply dark:after:bg-gray-300 dark:before:bg-gray-300 top-4 md:top-9 md:right-9;
 }
 
 .vm-header-border {
