@@ -9,7 +9,7 @@ type CheckVictoryProps = {
 export const checkVictory = ({ boardDisplayed, bombsCount }: CheckVictoryProps) => {
   const cellsCount = boardDisplayed.value
     .flat()
-    .filter((cell) => cell === null || cell === CELL_STATE.FLAG).length
+    .filter((cell) => cell === null || cell === CELL_STATE.FLAG || cell === CELL_STATE.DOUBT).length
 
   return cellsCount === bombsCount.value
 }

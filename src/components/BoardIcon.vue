@@ -6,6 +6,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { checkAvailableFieldsAround } from '@/common/checkAvailableFieldsAround'
 import eventBus from '@/events/eventBus'
+import { MOUSE_CLICK } from '@/enums/mouseClick'
 
 const gameData = useGameStore()
 
@@ -64,8 +65,25 @@ const handleClick = (row: number, col: number, event: MouseEvent) => {
 
   if (gameData.isGameOver || gameData.isVictory) return
 
-  if (event.button === 2) gameData.handleCellClickFlag({ row, column: col })
+  if (event.button === 2) {
+    const cellValue = gameData.board[row][col]
+
+    if (cellValue === CELL_STATE.FLAG) return gameData.handleCellClickDoubt({ row, column: col })
+
+    if (cellValue === CELL_STATE.DOUBT) return gameData.handleCellClickDoubt({ row, column: col })
+
+    gameData.handleCellClickFlag({ row, column: col })
+
+    return
+  }
+
   if (event.button !== 0) return
+
+  if (gameData.iconClick === MOUSE_CLICK.FLAG)
+    return gameData.handleCellClickFlag({ row, column: col })
+
+  if (gameData.iconClick === MOUSE_CLICK.DOUBT)
+    return gameData.handleCellClickDoubt({ row, column: col })
 
   if (!availableFieldsAround.value.ceil) return gameData.handleCellClick({ row, column: col })
 
@@ -80,8 +98,6 @@ const handleOpenCellClick = () => {
   if (ceilsAround.length <= 0) return
 
   if (!isNumberCell(currentCeil)) return
-
-  console.log(flagsAround, currentCeil)
 
   if (flagsAround.length >= currentCeil) {
     const hasBombs = ceilsAround.find(
@@ -207,6 +223,7 @@ updateAvailableFieldsAround()
   >
     <span v-if="item === CELL_STATE.EMPTY"></span>
     <span v-else-if="item === CELL_STATE.FLAG">🚩</span>
+    <span v-else-if="item === CELL_STATE.DOUBT" class="brightness-50 dark:brightness-100">❔</span>
     <span v-else-if="item === CELL_STATE.BOMB"
       ><img :src="bombGifSrc" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
     /></span>

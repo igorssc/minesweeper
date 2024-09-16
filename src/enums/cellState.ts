@@ -1,4 +1,5 @@
 export enum CELL_STATE {
+  DOUBT = -3,
   FLAG = -2,
   EMPTY = -1,
   BOMB = 0

@@ -15,8 +15,11 @@ import { LEVEL } from '@/enums/level'
 import { handleLevel } from '@/common/handleLevel'
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router'
 import { handleTip } from '@/common/handleTip'
+import { MOUSE_CLICK } from '@/enums/mouseClick'
+import { handleCellClickDoubt } from '@/common/handleCellClickDoubt'
 
 export const useGameStore = defineStore('game', () => {
+  const iconClick = ref<MOUSE_CLICK>(MOUSE_CLICK.NUMBER)
   const level = ref<LEVEL>(LEVEL.BEGINNER)
   const clicksTip = ref(0)
   const timeForTip = ref(0)
@@ -62,6 +65,8 @@ export const useGameStore = defineStore('game', () => {
     isGameOver.value = false
     openCeil.value = []
     allFlagsPositions.value = []
+
+    iconClick.value = MOUSE_CLICK.NUMBER
 
     stopTimer(timerInterval)
     stopAllTimeouts(timeouts)
@@ -141,6 +146,15 @@ export const useGameStore = defineStore('game', () => {
       allFlagsPositions
     })
 
+  const handleCellClickDoubtFunction = ({ row, column }: { row: number; column: number }) =>
+    handleCellClickDoubt({
+      column,
+      row,
+      boardDisplayed,
+      isClosed,
+      hasSound
+    })
+
   const handleTipFunction = () =>
     handleTip({
       allBombsPositions,
@@ -184,6 +198,7 @@ export const useGameStore = defineStore('game', () => {
     handleCellClick: handleCellClickFunction,
     handleCellClickFlag: handleCellClickFlagFunction,
     handleLevel: handleLevelFunction,
+    handleCellClickDoubt: handleCellClickDoubtFunction,
     handleTip: handleTipFunction,
     performanceMetric,
     stop,
@@ -197,6 +212,7 @@ export const useGameStore = defineStore('game', () => {
     hasSafeStart,
     level,
     timeBaseForTip,
-    clicksTip
+    clicksTip,
+    iconClick
   }
 })

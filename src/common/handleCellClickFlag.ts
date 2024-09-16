@@ -30,7 +30,11 @@ export const handleCellClickFlag = ({
 
   const cellValue = boardDisplayed.value[row][column]
 
-  if (bombsDisplayed.value <= CELL_STATE.BOMB && cellValue !== CELL_STATE.FLAG) return
+  if (
+    bombsDisplayed.value <= CELL_STATE.BOMB &&
+    !(cellValue === CELL_STATE.FLAG || cellValue === CELL_STATE.DOUBT)
+  )
+    return
 
   if (cellValue === CELL_STATE.FLAG) {
     boardDisplayed.value[row][column] = null
@@ -44,7 +48,7 @@ export const handleCellClickFlag = ({
     return
   }
 
-  if (typeof cellValue === 'number') return
+  if (typeof cellValue === 'number' && cellValue > 0) return
 
   const flagSoundHowl = new Howl({
     src: [flagSound],

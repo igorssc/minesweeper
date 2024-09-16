@@ -66,7 +66,13 @@ export const calculatePerformance = ({
 
   const openedCells = boardDisplayed.value
     .flat()
-    .filter((cell) => cell !== CELL_STATE.FLAG && cell !== CELL_STATE.BOMB && cell !== null).length
+    .filter(
+      (cell) =>
+        cell !== CELL_STATE.FLAG &&
+        cell !== CELL_STATE.DOUBT &&
+        cell !== CELL_STATE.BOMB &&
+        cell !== null
+    ).length
 
   const efficiencyScore = Math.min(100, 100 * (openedCells / totalNonBombCells))
 

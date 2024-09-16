@@ -14,7 +14,7 @@ interface HTMLElementWithLongPress extends HTMLElement {
 }
 
 export function longPress(Vue: App, options: LongPressOptions = { duration: 2000 }) {
-  if (!options.duration) options.duration = 2000
+  if (!options.duration) options.duration = 3000
 
   Vue.directive('long-press', {
     beforeMount(el: HTMLElementWithLongPress, binding: DirectiveBinding) {
