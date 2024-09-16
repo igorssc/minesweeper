@@ -218,7 +218,7 @@ updateAvailableFieldsAround()
 }
 .tip {
   animation: vibrate-tip 1.5s infinite linear;
-  @apply !bg-purple-500 dark:!bg-purple-800;
+  @apply !bg-purple-500 dark:!bg-purple-800 pointer-events-none;
 }
 .flag-error {
   @apply filter grayscale;

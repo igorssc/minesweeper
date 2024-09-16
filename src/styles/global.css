@@ -1,7 +1,7 @@
 @import '../fonts/fonts.css';
 
 body * {
-  @apply transition-all
+  @apply transition-all select-none;
 }
 @tailwind base;
 @tailwind components;
