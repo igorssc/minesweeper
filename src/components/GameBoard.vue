@@ -47,27 +47,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <FrameBase @contextmenu="(e) => e.preventDefault()" class="!gap-1">
-    <div
-      :class="
-        twMerge(
-          'h-12 w-12 md:h-16 md:w-16 border-2 border-gray-600 dark:border-zinc-700 mb-2 md:mb-3 flex items-center justify-center text-xl md:text-4xl cursor-pointer',
-          gameData.iconClick === MOUSE_CLICK.DOUBT && 'brightness-50 dark:brightness-100'
-        )
-      "
-      @click="handleIconClick"
-    >
-      {{ icon[gameData.iconClick] }}
-    </div>
-    <div v-for="(row, rowIndex) in gameData.board" :key="rowIndex" class="flex gap-1 w-full">
-      <div v-for="(item, columnIndex) in row" :key="rowIndex + '-' + columnIndex">
-        <BoardIcon
-          :item="item"
-          :row="rowIndex"
-          :column="columnIndex"
-          v-long-press="() => handleLongPress(rowIndex, columnIndex)"
-        />
+  <div>
+    <FrameBase class-name="rounded-b-none !pb-0">
+      <div
+        :class="
+          twMerge(
+            'h-12 w-12 md:h-16 md:w-16 border-2 border-gray-600 dark:border-zinc-700 mb-2 md:mb-3 flex items-center justify-center text-xl md:text-4xl cursor-pointer',
+            gameData.iconClick === MOUSE_CLICK.DOUBT && 'brightness-50 dark:brightness-100'
+          )
+        "
+        @click="handleIconClick"
+      >
+        {{ icon[gameData.iconClick] }}
       </div>
-    </div>
-  </FrameBase>
+    </FrameBase>
+    <FrameBase @contextmenu="(e) => e.preventDefault()" class-name="gap-1 rounded-t-none !pt-1">
+      <div v-for="(row, rowIndex) in gameData.board" :key="rowIndex" class="flex gap-1 w-full">
+        <div v-for="(item, columnIndex) in row" :key="rowIndex + '-' + columnIndex">
+          <BoardIcon
+            :item="item"
+            :row="rowIndex"
+            :column="columnIndex"
+            v-long-press="() => handleLongPress(rowIndex, columnIndex)"
+          />
+        </div>
+      </div>
+    </FrameBase>
+  </div>
 </template>
