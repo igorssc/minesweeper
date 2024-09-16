@@ -2,6 +2,7 @@
 import { useGameStore } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
 import bombGif from '@/assets/bomb_compressed.gif'
+import explosionGif from '@/assets/explosion.gif'
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { checkAvailableFieldsAround } from '@/common/checkAvailableFieldsAround'
@@ -29,8 +30,13 @@ const colorItem: ColorItem = {
 
 const bombGifSrc = ref('')
 
-function updateGifSrc() {
-  bombGifSrc.value = `${bombGif}?t=${Date.now()}`
+function updateGifSrc(changeGif?: boolean) {
+  if (!changeGif) {
+    bombGifSrc.value = `${bombGif}?t=${Date.now()}`
+    return
+  }
+
+  bombGifSrc.value = explosionGif
 }
 
 const props = defineProps<{
@@ -196,6 +202,10 @@ watch(
   (newValue) => {
     if (newValue === 0) {
       updateGifSrc()
+
+      setTimeout(() => {
+        updateGifSrc(true)
+      }, 2000)
     }
   }
 )
