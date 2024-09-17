@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import FrameBase from './FrameBase.vue'
-import ButtonComponent from './ButtonComponent.vue'
 import { defaultLevels } from '@/utils/defaultLevels'
 import { isValidLevel, LEVEL } from '@/enums/level'
 import { computed, onMounted } from 'vue'
@@ -88,15 +87,15 @@ onMounted(() => {
       <BaseModal
         v-for="level in availableLevels"
         :key="level"
-        title="Deseja mesmo reiniciar?"
+        title="Deseja mesmo alterar o nível?"
         success-text="Continuar"
         :button-text="levels[level].label"
         :active-button="gameData.level === level"
         :disabled-button="gameData.level === level"
         :handle-success="() => gameData.handleLevel({ level, route, router })"
       >
-        Mudar para o nível <b>{{ levels[level].label }}</b
-        >, irá zerar todo o andamento atual. Deseja mesmo prosseguir?
+        Mudar para o nível <b>{{ levels[level].label }}</b> irá zerar todo o andamento atual. Deseja
+        mesmo prosseguir?
       </BaseModal>
     </div>
   </FrameBase>
@@ -113,7 +112,14 @@ onMounted(() => {
       <InputNumber :value="bombs" @update:modelValue="($event) => (bombs = +$event)">
         <template #label>Bombas</template>
       </InputNumber>
-      <ButtonComponent @click="handleBoard"> Alterar </ButtonComponent>
+      <BaseModal
+        title="Deseja mesmo alterar as informações?"
+        success-text="Continuar"
+        button-text="Alterar"
+        :handle-success="handleBoard"
+      >
+        Mudar as informações irá zerar todo o andamento atual. Deseja mesmo prosseguir?
+      </BaseModal>
     </div>
   </FrameBase>
 </template>

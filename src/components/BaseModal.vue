@@ -39,13 +39,7 @@ const handleSuccessButton = () => {
   >
     {{ buttonText }}
   </ButtonComponent>
-  <vue-modality-v3
-    ref="modalRef"
-    centered
-    title="Deseja mesmo reiniciar?"
-    :hide-footer="true"
-    width="600"
-  >
+  <vue-modality-v3 ref="modalRef" centered :title="title" :hide-footer="true" width="600">
     <div class="py-4 md:py-8">
       <slot />
     </div>
