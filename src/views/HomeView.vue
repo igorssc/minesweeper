@@ -4,6 +4,10 @@ import GameData from '@/components/GameData.vue'
 import LevelBar from '@/components/LevelBar.vue'
 import TitleGame from '@/components/TitleGame.vue'
 import VictoryComponent from '@/components/VictoryComponent.vue'
+import { monitorEventBus } from '@/events/eventBus'
+import { onMounted } from 'vue'
+
+onMounted(() => monitorEventBus())
 </script>
 
 <template>

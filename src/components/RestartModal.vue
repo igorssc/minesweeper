@@ -15,7 +15,6 @@ const handleRestartGame = () => {
     button-text="Reiniciar"
     success-text="Reiniciar"
     :handle-success="handleRestartGame"
-    scheme="secondary"
   >
     Reiniciar a partida irá zerar todo o andamento atual. Deseja mesmo prosseguir?
   </BaseModal>
