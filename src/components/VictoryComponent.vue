@@ -76,7 +76,7 @@ watch(
       </div>
       <slot />
       <div
-        class="text-center text-md md:text-lg xl:text-2xl mt-16 md:mt-24 relative z-[9999999]"
+        class="text-center dark:text-gray-400 text-md md:text-lg xl:text-2xl mt-16 md:mt-24 relative z-[9999999]"
         v-if="gameData.isVictory"
       >
         Parabéns!! Você ganhou!

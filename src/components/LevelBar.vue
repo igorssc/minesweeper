@@ -7,6 +7,7 @@ import { isValidLevel, LEVEL } from '@/enums/level'
 import { computed, onMounted } from 'vue'
 import InputNumber from './InputNumber.vue'
 import { useRoute, useRouter } from 'vue-router'
+import BaseModal from './BaseModal.vue'
 
 const gameData = useGameStore()
 const route = useRoute()
@@ -84,14 +85,19 @@ onMounted(() => {
 <template>
   <FrameBase>
     <div class="flex justify-around w-full max-2xl:flex-col max-2xl:gap-4 max-md:gap-2">
-      <ButtonComponent
+      <BaseModal
         v-for="level in availableLevels"
         :key="level"
-        @click="() => gameData.handleLevel({ level, route, router })"
-        :active="gameData.level === level"
+        title="Deseja mesmo reiniciar?"
+        success-text="Continuar"
+        :button-text="levels[level].label"
+        :active-button="gameData.level === level"
+        :disabled-button="gameData.level === level"
+        :handle-success="() => gameData.handleLevel({ level, route, router })"
       >
-        {{ levels[level].label }}
-      </ButtonComponent>
+        Mudar para o nível <b>{{ levels[level].label }}</b
+        >, irá zerar todo o andamento atual. Deseja mesmo prosseguir?
+      </BaseModal>
     </div>
   </FrameBase>
   <FrameBase v-if="gameData.level === LEVEL.CUSTOMIZE">
