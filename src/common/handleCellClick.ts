@@ -138,7 +138,7 @@ export const handleCellClick = ({
 
   const cellValueDisplayed = boardDisplayed.value[currentRow][currentColumn]
 
-  if (cellValueDisplayed === CELL_STATE.FLAG) return
+  if (cellValueDisplayed === CELL_STATE.FLAG || cellValueDisplayed === CELL_STATE.DOUBT) return
 
   if (cellValue === CELL_STATE.BOMB) {
     gameOver({

@@ -169,7 +169,18 @@ export const useGameStore = defineStore('game', () => {
       allFlagsPositions,
       numberColumns: columns,
       numberRows: rows,
-      timeForTip
+      timeForTip,
+      isVictory,
+      isGameOver,
+      isFirstClick,
+      hasSafeStart,
+      timerInterval,
+      elapsedTime,
+      bombsCount: bombs,
+      performanceMetric,
+      minimumClicks,
+      timeouts,
+      createBoard
     })
 
   const handleLevelFunction = ({

@@ -1,9 +1,7 @@
-import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
-import eventBus from '@/events/eventBus'
-import { shuffleArray } from '@/utils/shuffleArray'
 import type { Ref } from 'vue'
-import { handleCellClickFlag } from './handleCellClickFlag'
-import { checkBombsAround } from './checkBombsAround'
+import { handleTipBomb } from './handleTipBomb'
+import { handleTipNumber } from './handleTipNumber'
+import type { BoardItemProps } from '@/enums/cellState'
 
 type HandleTipProps = {
   bombsDisplayed: Ref<number>
@@ -18,6 +16,17 @@ type HandleTipProps = {
   numberRows: Ref<number>
   baseBoard: Ref<BoardItemProps[][]>
   allFlagsPositions: Ref<[number, number][]>
+  isVictory: Ref<boolean>
+  isGameOver: Ref<boolean>
+  isFirstClick: Ref<boolean>
+  hasSafeStart: Ref<boolean>
+  timerInterval: Ref<number | null>
+  elapsedTime: Ref<number>
+  bombsCount: Ref<number>
+  performanceMetric: Ref<number>
+  minimumClicks: Ref<number>
+  timeouts: Ref<number[]>
+  createBoard: () => void
   clicksCount: {
     leftCursor: number
     rightCursor: number
@@ -37,83 +46,65 @@ export const handleTip = ({
   numberColumns,
   numberRows,
   allFlagsPositions,
-  isClosed
+  isClosed,
+  isVictory,
+  isGameOver,
+  isFirstClick,
+  hasSafeStart,
+  timerInterval,
+  elapsedTime,
+  bombsCount,
+  performanceMetric,
+  minimumClicks,
+  timeouts,
+  createBoard
 }: HandleTipProps) => {
-  if (bombsDisplayed.value <= 0) return 0
+  const sortedNumber = Math.random()
 
-  const allOpenedPosition = [...JSON.parse(JSON.stringify(openCeil.value))]
-
-  const allOpenedPositionWithNumbers = allOpenedPosition.filter(([, , value]) =>
-    isNumberCell(value)
-  )
-
-  const allRandomOpenedPositionWithNumbers = shuffleArray(allOpenedPositionWithNumbers)
-
-  for (const [row, column] of allRandomOpenedPositionWithNumbers) {
-    if (clicksTip.value === 0 || timeForTip.value === 0) break
-
-    const bombsAround = checkBombsAround({
-      currentColumn: column,
-      currentRow: row,
+  if (sortedNumber <= 0.5) {
+    handleTipBomb({
+      bombsDisplayed,
+      allBombsPositions,
+      boardDisplayed,
+      clicksCount,
+      hasSound,
+      clicksTip,
+      timeForTip,
+      openCeil,
+      baseBoard,
       numberColumns,
       numberRows,
-      baseBoard
+      allFlagsPositions,
+      isClosed
     })
 
-    if (bombsAround.length === 0) continue
-
-    for (const [bombPositionRow, bombPositionColumn] of bombsAround) {
-      const isBombHasFlag =
-        boardDisplayed.value[bombPositionRow][bombPositionColumn] === CELL_STATE.FLAG
-
-      if (isBombHasFlag) continue
-
-      eventBus.emit('tip', { row: bombPositionRow, column: bombPositionColumn })
-
-      clicksTip.value = 0
-      timeForTip.value = 0
-
-      setTimeout(() => {
-        handleCellClickFlag({
-          column: bombPositionColumn,
-          row: bombPositionRow,
-          boardDisplayed,
-          bombsDisplayed,
-          isClosed,
-          hasSound,
-          allFlagsPositions,
-          clicksCount
-        })
-      }, 1500)
-
-      break
-    }
+    return
   }
 
-  if (clicksTip.value === 0) return
-
-  const allRandomBombsPositions = shuffleArray([...allBombsPositions.value])
-
-  for (const [bombPositionRow, bombPositionColumn] of allRandomBombsPositions) {
-    if (boardDisplayed.value[bombPositionRow][bombPositionColumn] === CELL_STATE.FLAG) continue
-
-    eventBus.emit('tip', { row: bombPositionRow, column: bombPositionColumn })
-
-    clicksTip.value = 0
-
-    setTimeout(() => {
-      handleCellClickFlag({
-        column: bombPositionColumn,
-        row: bombPositionRow,
-        boardDisplayed,
-        bombsDisplayed,
-        isClosed,
-        hasSound,
-        allFlagsPositions,
-        clicksCount
-      })
-    }, 1500)
-
-    break
-  }
+  handleTipNumber({
+    bombsDisplayed,
+    allBombsPositions,
+    boardDisplayed,
+    clicksCount,
+    hasSound,
+    clicksTip,
+    timeForTip,
+    openCeil,
+    baseBoard,
+    numberColumns,
+    numberRows,
+    allFlagsPositions,
+    isClosed,
+    isVictory,
+    isGameOver,
+    isFirstClick,
+    hasSafeStart,
+    timerInterval,
+    elapsedTime,
+    bombsCount,
+    performanceMetric,
+    minimumClicks,
+    timeouts,
+    createBoard
+  })
 }
