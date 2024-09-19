@@ -1,6 +1,8 @@
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
 
+  console.log(url)
+  console.log(url.pathname)
   // Se o arquivo for o GIF com o parâmetro ?t=...
   if (url.pathname.startsWith('bomb_compressed.gif')) {
     // Remove o parâmetro para buscar o cache
