@@ -1,4 +1,4 @@
-import bombSound from '@/assets/audios/bomb-explosion.mp3'
+import bombSound from '@public/assets/audios/bomb-explosion.mp3'
 import { revealCell } from './revealCell'
 import { sortBombsRadially } from './sortBombsRadially'
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'

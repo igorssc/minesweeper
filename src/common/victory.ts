@@ -1,4 +1,4 @@
-import winnerSound from '@/assets/audios/winner.mp3'
+import winnerSound from '@public/assets/audios/winner.mp3'
 import { markBombsAsVictory } from './markBombsAsVictory'
 import type { BoardItemProps } from '@/enums/cellState'
 import { Howl } from 'howler'
