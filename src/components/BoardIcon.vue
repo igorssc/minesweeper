@@ -30,20 +30,28 @@ const colorItem: ColorItem = {
 
 const bombGifSrc = ref('')
 
-function updateGifSrc(changeGif?: boolean) {
-  if (!changeGif) {
-    fetch(bombGif)
-      .then((response) => response.blob())
-      .then((blob) => {
-        bombGifSrc.value = URL.createObjectURL(blob)
-      })
-      .catch((error) => {
-        console.error('Erro ao carregar o GIF:', error)
-      })
+let bombGifBlob: Blob | null = null
+
+async function updateGifSrc(changeGif?: boolean) {
+  if (changeGif) {
+    bombGifSrc.value = explosionGif
     return
   }
 
-  bombGifSrc.value = explosionGif
+  if (bombGifBlob) {
+    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
+    return
+  }
+
+  try {
+    const response = await fetch(bombGif)
+    if (!response.ok) return console.error('Falha ao buscar GIF')
+
+    bombGifBlob = await response.blob()
+    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
+  } catch (error) {
+    console.error('Erro ao carregar o GIF:', error)
+  }
 }
 
 const props = defineProps<{
@@ -210,8 +218,6 @@ watch(
     if (newValue === 0) {
       updateGifSrc()
 
-      console.log(bombGifSrc, explosionGif)
-
       setTimeout(() => {
         updateGifSrc(true)
       }, 2000)
@@ -244,7 +250,7 @@ updateAvailableFieldsAround()
     <span v-else-if="item === CELL_STATE.FLAG">🚩</span>
     <span v-else-if="item === CELL_STATE.DOUBT" class="brightness-50 dark:brightness-100">❔</span>
     <span v-else-if="item === CELL_STATE.BOMB"
-      ><img :src="bombGifSrc || explosionGif" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
+      ><img v-if="!!bombGifSrc" :src="bombGifSrc" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
     /></span>
 
     <span v-else>{{ item }}</span>
