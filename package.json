@@ -19,6 +19,7 @@
     "pinia": "^2.1.7",
     "tailwind-merge": "^2.5.2",
     "use-sound": "^4.0.3",
+    "vite-plugin-pwa": "^0.20.5",
     "vue": "^3.4.29",
     "vue-confetti-explosion": "^1.0.2",
     "vue-modality-v3": "^2.0.4",
