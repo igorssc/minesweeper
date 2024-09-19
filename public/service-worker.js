@@ -1,23 +1,32 @@
+self.addEventListener('install', () => {
+  console.info('Service Worker instalado')
+})
+
+self.addEventListener('activate', () => {
+  console.info('Service Worker ativado')
+  return self.clients.claim() // Faz com que o SW controle imediatamente as páginas
+})
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
 
   console.log(url)
   console.log(url.pathname)
-  // Se o arquivo for o GIF com o parâmetro ?t=...
-  if (url.pathname.startsWith('bomb_compressed.gif')) {
-    // Remove o parâmetro para buscar o cache
-    url.search = '' // Remove os parâmetros de cache busting
+
+  // Verifique se a URL contém o arquivo "bomb_compressed"
+  if (url.pathname.includes('bomb_compressed')) {
+    // Remove os parâmetros de cache busting
+    url.search = '' // Remove parâmetros como ?t=123456
 
     event.respondWith(
       caches.match(url).then((response) => {
         if (response) {
-          // Se o arquivo já está no cache, o retorna
+          // Retorna o arquivo do cache se disponível
           return response
         }
 
-        // Se não está no cache, busca na rede
         return fetch(event.request).then((networkResponse) => {
-          // Opcionalmente, adiciona a resposta ao cache
+          // Cacheia o arquivo dinamicamente
           return caches.open('dynamic-cache').then((cache) => {
             cache.put(url, networkResponse.clone())
             return networkResponse
@@ -25,8 +34,5 @@ self.addEventListener('fetch', (event) => {
         })
       })
     )
-  } else {
-    // Processa outros arquivos normalmente
-    event.respondWith(fetch(event.request))
   }
 })
