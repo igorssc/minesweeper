@@ -73,71 +73,96 @@ export const handleTipNumber = ({
 
   const allRandomOpenedPositionWithNumbers = shuffleArray(allOpenedPositionWithNumbers)
 
-  for (const [row, column] of allRandomOpenedPositionWithNumbers) {
-    if (clicksTip.value === 0 || timeForTip.value === 0) break
+  let tip: 'number' | 'island' = Math.random() <= 0.3 ? 'number' : 'island'
+  let tipSearchCount = 0
 
-    const availableFieldsAround = checkAvailableFieldsAround({
-      currentColumn: column,
-      currentRow: row,
-      numberColumns,
-      numberRows,
-      boardDisplayed
-    })
+  while (tipSearchCount < 2) {
+    tipSearchCount++
 
-    const allRandomAvailablePositions = shuffleArray([...availableFieldsAround.ceilsAround])
+    for (const [row, column] of allRandomOpenedPositionWithNumbers) {
+      if (clicksTip.value === 0 || timeForTip.value === 0) break
 
-    const allRandomAvailablePositionsNonBombs = allRandomAvailablePositions.filter(
-      ([positionRow, positionColumn]) =>
-        baseBoard.value[positionRow][positionColumn] !== CELL_STATE.BOMB
-    )
+      const availableFieldsAround = checkAvailableFieldsAround({
+        currentColumn: column,
+        currentRow: row,
+        numberColumns,
+        numberRows,
+        boardDisplayed
+      })
 
-    if (allRandomAvailablePositionsNonBombs.length === 0) continue
+      const allRandomAvailablePositions = shuffleArray([...availableFieldsAround.ceilsAround])
 
-    for (const [cellPositionRow, cellPositionColumn] of shuffleArray([
-      ...allRandomAvailablePositionsNonBombs
-    ])) {
-      const isCellHasFlag =
-        boardDisplayed.value[cellPositionRow][cellPositionColumn] === CELL_STATE.FLAG
+      const allRandomAvailablePositionsNonBombs = allRandomAvailablePositions.filter(
+        ([positionRow, positionColumn]) =>
+          baseBoard.value[positionRow][positionColumn] !== CELL_STATE.BOMB
+      )
 
-      if (isCellHasFlag) continue
+      if (allRandomAvailablePositionsNonBombs.length === 0) continue
 
-      eventBus.emit('tip', { row: cellPositionRow, column: cellPositionColumn })
+      const allRandomAvailablePositionsWithNumber = allRandomAvailablePositionsNonBombs.filter(
+        ([positionRow, positionColumn]) =>
+          isNumberCell(baseBoard.value[positionRow][positionColumn])
+      )
 
-      clicksTip.value = 0
-      timeForTip.value = 0
+      const allRandomAvailablePositionsWithIsland = allRandomAvailablePositionsNonBombs.filter(
+        ([positionRow, positionColumn]) => baseBoard.value[positionRow][positionColumn] === null
+      )
 
-      setTimeout(() => {
-        handleCellClick({
-          currentColumn: cellPositionColumn,
-          currentRow: cellPositionRow,
-          numberColumns,
-          numberRows,
-          isClosed,
-          isVictory,
-          isGameOver,
-          isFirstClick,
-          hasSafeStart,
-          timeForTip,
-          elapsedTime,
-          timerInterval,
-          baseBoard,
-          boardDisplayed,
-          bombsDisplayed,
-          clicksCount,
-          allBombsPositions,
-          timeouts,
-          performanceMetric,
-          minimumClicks,
-          hasSound,
-          createBoard,
-          clicksTip,
-          allFlagsPositions,
-          openCeil,
-          bombsCount
-        })
-      }, 1500)
+      const allRandomPositions = {
+        number: allRandomAvailablePositionsWithNumber,
+        island: allRandomAvailablePositionsWithIsland
+      }
 
-      break
+      for (const [cellPositionRow, cellPositionColumn] of shuffleArray([
+        ...allRandomPositions[tip]
+      ])) {
+        const isCellHasFlag =
+          boardDisplayed.value[cellPositionRow][cellPositionColumn] === CELL_STATE.FLAG
+
+        if (isCellHasFlag) continue
+
+        eventBus.emit('tip', { row: cellPositionRow, column: cellPositionColumn })
+
+        clicksTip.value = 0
+        timeForTip.value = 0
+        ++tipSearchCount
+
+        setTimeout(() => {
+          handleCellClick({
+            currentColumn: cellPositionColumn,
+            currentRow: cellPositionRow,
+            numberColumns,
+            numberRows,
+            isClosed,
+            isVictory,
+            isGameOver,
+            isFirstClick,
+            hasSafeStart,
+            timeForTip,
+            elapsedTime,
+            timerInterval,
+            baseBoard,
+            boardDisplayed,
+            bombsDisplayed,
+            clicksCount,
+            allBombsPositions,
+            timeouts,
+            performanceMetric,
+            minimumClicks,
+            hasSound,
+            createBoard,
+            clicksTip,
+            allFlagsPositions,
+            openCeil,
+            bombsCount
+          })
+        }, 1500)
+
+        break
+      }
     }
+
+    if (tip === 'number') tip = 'island'
+    if (tip === 'island') tip = 'number'
   }
 }

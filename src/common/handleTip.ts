@@ -61,7 +61,7 @@ export const handleTip = ({
 }: HandleTipProps) => {
   const sortedNumber = Math.random()
 
-  if (sortedNumber <= 0.5) {
+  if (sortedNumber <= 0.35) {
     handleTipBomb({
       bombsDisplayed,
       allBombsPositions,
