@@ -235,7 +235,7 @@ updateAvailableFieldsAround()
     <span v-else-if="item === CELL_STATE.FLAG">🚩</span>
     <span v-else-if="item === CELL_STATE.DOUBT" class="brightness-50 dark:brightness-100">❔</span>
     <span v-else-if="item === CELL_STATE.BOMB"
-      ><img :src="bombGifSrc" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
+      ><img :src="bombGifSrc || explosionGif" alt="Descrição do GIF" class="w-8 h-8 max-w-8"
     /></span>
 
     <span v-else>{{ item }}</span>
