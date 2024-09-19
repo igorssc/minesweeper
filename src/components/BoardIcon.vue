@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
-import bombGif from '@/assets/bomb_compressed.gif'
-import explosionGif from '@/assets/explosion.gif'
+
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { checkAvailableFieldsAround } from '@/common/checkAvailableFieldsAround'
@@ -30,34 +29,11 @@ const colorItem: ColorItem = {
 
 const bombGifSrc = ref('')
 
-let bombGifBlob: Blob | null = null
-
-async function updateGifSrc(changeGif?: boolean) {
-  if (changeGif) {
-    bombGifSrc.value = explosionGif
-    return
-  }
-
-  if (bombGifBlob) {
-    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
-    return
-  }
-
-  try {
-    const response = await fetch(bombGif)
-    if (!response.ok) return console.error('Falha ao buscar GIF')
-
-    bombGifBlob = await response.blob()
-    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
-  } catch (error) {
-    console.error('Erro ao carregar o GIF:', error)
-  }
-}
-
 const props = defineProps<{
   item: BoardItemProps
   row: number
   column: number
+  updateGifSrc(bombGifSrc: Ref<string>, changeGif?: boolean): Promise<void>
 }>()
 
 const availableFieldsAround = ref<{
@@ -216,10 +192,10 @@ watch(
   () => props.item,
   (newValue) => {
     if (newValue === 0) {
-      updateGifSrc()
+      props.updateGifSrc(bombGifSrc)
 
       setTimeout(() => {
-        updateGifSrc(true)
+        props.updateGifSrc(bombGifSrc, true)
       }, 2000)
     }
   }

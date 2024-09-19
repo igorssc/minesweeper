@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import BoardIcon from './BoardIcon.vue'
-import { onMounted } from 'vue'
+import { onMounted, type Ref } from 'vue'
 import FrameBase from './FrameBase.vue'
 import { MOUSE_CLICK } from '@/enums/mouseClick'
 import { twMerge } from 'tailwind-merge'
 import { CELL_STATE } from '@/enums/cellState'
+import bombGif from '@/assets/bomb_compressed.gif'
+import explosionGif from '@/assets/explosion.gif'
 
 const gameData = useGameStore()
 
@@ -17,6 +19,30 @@ const handleLongPress = (row: number, col: number) => {
   if (cellValue === CELL_STATE.DOUBT) return gameData.handleCellClickDoubt({ row, column: col })
 
   gameData.handleCellClickFlag({ row, column: col })
+}
+
+let bombGifBlob: Blob | null = null
+
+async function updateGifSrc(bombGifSrc: Ref<string>, changeGif?: boolean) {
+  if (changeGif) {
+    bombGifSrc.value = explosionGif
+    return
+  }
+
+  if (bombGifBlob) {
+    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
+    return
+  }
+
+  try {
+    const response = await fetch(bombGif)
+    if (!response.ok) return console.error('Falha ao buscar GIF')
+
+    bombGifBlob = await response.blob()
+    bombGifSrc.value = URL.createObjectURL(bombGifBlob)
+  } catch (error) {
+    console.error('Erro ao carregar o GIF:', error)
+  }
 }
 
 const icon = {
@@ -68,6 +94,7 @@ onMounted(() => {
             :item="item"
             :row="rowIndex"
             :column="columnIndex"
+            :update-gif-src="updateGifSrc"
             v-long-press="() => handleLongPress(rowIndex, columnIndex)"
           />
         </div>
