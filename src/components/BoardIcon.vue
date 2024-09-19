@@ -32,7 +32,14 @@ const bombGifSrc = ref('')
 
 function updateGifSrc(changeGif?: boolean) {
   if (!changeGif) {
-    bombGifSrc.value = `${bombGif}?t=${Date.now()}`
+    fetch(bombGif)
+      .then((response) => response.blob())
+      .then((blob) => {
+        bombGifSrc.value = URL.createObjectURL(blob)
+      })
+      .catch((error) => {
+        console.error('Erro ao carregar o GIF:', error)
+      })
     return
   }
 
