@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import { twMerge } from 'tailwind-merge'
-import bombGif from '@public/assets/bomb_compressed.gif'
-import explosionGif from '@public/assets/explosion.gif'
+import bombGif from '@/assets/bomb_compressed.gif'
+import explosionGif from '@/assets/explosion.gif'
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { CELL_STATE, isNumberCell, type BoardItemProps } from '@/enums/cellState'
 import { checkAvailableFieldsAround } from '@/common/checkAvailableFieldsAround'

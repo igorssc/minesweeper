@@ -1,6 +1,6 @@
 import { CELL_STATE, type BoardItemProps } from '@/enums/cellState'
 import type { Ref } from 'vue'
-import flagSound from '@public/assets/audios/flag.mp3'
+import flagSound from '@/assets/audios/flag.mp3'
 
 type HandleCellClickDoubtProps = {
   row: number
