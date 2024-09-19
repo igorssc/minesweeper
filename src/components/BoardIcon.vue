@@ -203,6 +203,8 @@ watch(
     if (newValue === 0) {
       updateGifSrc()
 
+      console.log(bombGifSrc, explosionGif)
+
       setTimeout(() => {
         updateGifSrc(true)
       }, 2000)
