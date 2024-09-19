@@ -1,6 +1,4 @@
 {
-  "theme_color": "#18181b",
-  "background_color": "#18181b",
   "icons": [
     {
       "purpose": "maskable",
@@ -20,5 +18,7 @@
   "dir": "auto",
   "lang": "pt-BR",
   "start_url": "https://minesweeper-igorssc.vercel.app/",
-  "name": "Campo Minado"
+  "name": "Campo Minado",
+  "theme_color": "#2196F3",
+  "background_color": "#18181b"
 }
