@@ -4,7 +4,7 @@ import { useGameStore } from '@/stores/game'
 import { formatTime } from '@/utils/formatTime'
 import ItemListText from './ItemListText.vue'
 import DataList from './DataList.vue'
-import ItemListToggle from './ItemListToggle.vue'
+import SafeStartModal from './SafeStartModal.vue'
 import ItemListSound from './ItemListSound.vue'
 import ItemListTheme from './ItemListTheme.vue'
 import ButtonComponent from './ButtonComponent.vue'
@@ -32,10 +32,12 @@ const hasTip = computed(
           <ItemListTheme />
           <ItemListSound />
         </div>
+
         <ItemListText>
           <template #title>Tempo</template>
           <template #item>{{ formatTime(gameData.elapsedTime) }}</template>
         </ItemListText>
+
         <ItemListText>
           <template #title>Bombas</template>
           <template #item>{{ gameData.bombsDisplayed }}</template>
@@ -51,6 +53,7 @@ const hasTip = computed(
             </TooltipComponent>
           </template>
         </ItemListText>
+
         <ItemListText>
           <template #title>Jogadas mínimas</template>
           <template #item>{{ gameData.minimumClicks }}</template>
@@ -65,10 +68,12 @@ const hasTip = computed(
             </TooltipComponent>
           </template>
         </ItemListText>
+
         <ItemListText>
           <template #title>Cliques (mouse esquerdo)</template>
           <template #item>{{ gameData.clicksCount.leftCursor }}</template>
         </ItemListText>
+
         <ItemListText>
           <template #title>Cliques (mouse direito)</template>
           <template #item>{{ gameData.clicksCount.rightCursor }}</template>
@@ -83,23 +88,13 @@ const hasTip = computed(
             </TooltipComponent>
           </template>
         </ItemListText>
+
         <ItemListText>
           <template #title>Aproveitamento</template>
           <template #item>{{ gameData.performanceMetric.toFixed(1) }}%</template>
         </ItemListText>
-        <ItemListToggle>
-          <template #title>Início Seguro</template>
-          <template #tooltip>
-            <TooltipComponent :auto-hide="true">
-              <template #icon>
-                <InformationIcon />
-              </template>
-              <template #information>
-                Iniciar o jogo sempre por uma casa válida, afim de evitar minas na primeira jogada.
-              </template>
-            </TooltipComponent>
-          </template>
-        </ItemListToggle>
+
+        <SafeStartModal />
       </DataList>
 
       <TooltipComponent
