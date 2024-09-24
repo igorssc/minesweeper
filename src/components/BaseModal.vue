@@ -73,7 +73,7 @@ const handleSuccessButton = () => {
 
 <style>
 .vue-modality-dialog {
-  @apply bg-gray-300 bg-gradient-to-tr from-gray-300 via-blue-500/10 to-gray-300 dark:from-gray-900 dark:via-cyan-950 dark:to-gray-900 text-gray-900 dark:text-gray-300 md:p-8 rounded-md shadow-lg !h-auto;
+  @apply bg-gray-300 bg-gradient-to-tr from-gray-300 via-blue-500/10 to-gray-300 dark:from-zinc-950 dark:via-gray-900 dark:to-zinc-950 text-gray-900 dark:text-gray-300 md:p-8 rounded-md shadow-lg !h-auto;
 }
 
 .vm-overlay {
