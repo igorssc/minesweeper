@@ -1,41 +1,71 @@
-![Sem título-3](https://github.com/user-attachments/assets/6ef33f51-fb54-4f16-a964-8e473c7a3cb2)
+![Featured](https://github.com/user-attachments/assets/6ef33f51-fb54-4f16-a964-8e473c7a3cb2)
 
-# minesweeper
+Project developed in order to improve software development skills. The project is based on the minesweeper game, known worldwide.
 
-This template should help get you started developing with Vue 3 in Vite.
+- [Technologies](#technologies)
+- [How to run](#how-to-run)
+- [Preview](#preview)
+- [License](#license)
 
-## Recommended IDE Setup
+<a id="technologies"></a>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## ✨ Technologies
 
-## Type Support for `.vue` Imports in TS
+This project was developed with the following technologies:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Vue
+- TypeScript
+- Tailwind
+- Pinia
 
-## Customize configuration
+<a id="how-to-run"></a>
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## 🚀 How to run
 
-## Project Setup
+- Clone the repository
 
-```sh
-npm install
+```bash
+git clone https://github.com/igorssc/minesweeper.git
+
+cd minesweeper
 ```
 
-### Compile and Hot-Reload for Development
+- Install dependencies
 
-```sh
-npm run dev
+```bash
+yarn
+
+# or
+
+npm init
 ```
 
-### Type-Check, Compile and Minify for Production
+- Put your environment variables in a file .env at the root of the project
 
-```sh
-npm run build
+- Start the server
+
+```bash
+yarn dev --port 3000
+
+# or
+
+npm run dev -- --port 3000
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+You can now access [`localhost:3000`](http://localhost:3000) from your browser.
 
-```sh
-npm run lint
-```
+<a id="preview"></a>
+
+## 🪄 Preview
+
+Access <https://minesweeper-igorssc.vercel.app/>
+
+<a id="license"></a>
+
+## 📝 License
+
+This project is under MIT licence. See the archive [LICENSE](LICENSE.md) to more details.
+
+---
+
+Made with 💜 by Igor Santos 👋
