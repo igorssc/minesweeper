@@ -1,3 +1,5 @@
+![Sem título-3](https://github.com/user-attachments/assets/6ef33f51-fb54-4f16-a964-8e473c7a3cb2)
+
 # minesweeper
 
 This template should help get you started developing with Vue 3 in Vite.
