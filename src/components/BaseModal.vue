@@ -53,17 +53,13 @@ const handleSuccessButton = () => {
       <ButtonComponent
         @click="handleHideModal"
         class-name="
-            bg-transparent shadow-none hover:bg-transparent dark:hover:bg-gray-200/10 dark:hover:border-gray-200/20
-            
-        "
+            bg-transparent shadow-none hover:bg-transparent dark:hover:bg-gray-200/10 dark:hover:border-gray-200/20"
       >
         Cancelar
       </ButtonComponent>
       <ButtonComponent
         @click="handleSuccessButton"
-        class-name="dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-400 dark:hover:border-gray-400
-         
-        "
+        class-name="dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-400 dark:hover:border-gray-400"
       >
         {{ successText }}
       </ButtonComponent>
@@ -73,7 +69,7 @@ const handleSuccessButton = () => {
 
 <style>
 .vue-modality-dialog {
-  @apply bg-gray-300 bg-gradient-to-tr from-gray-300 via-blue-500/10 to-gray-300 dark:from-zinc-950 dark:via-gray-900 dark:to-zinc-950 text-gray-900 dark:text-gray-300 md:p-8 rounded-md shadow-lg !h-auto;
+  @apply bg-gray-300 bg-gradient-to-tr from-gray-300 via-gray-500/10 to-gray-300 dark:from-zinc-700 dark:via-zinc-800 dark:to-zinc-900 text-gray-900 dark:text-gray-300 md:p-8 rounded-md shadow-lg !h-auto;
 }
 
 .vm-overlay {
