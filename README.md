@@ -1,5 +1,4 @@
 ![Featured](https://github.com/user-attachments/assets/6ef33f51-fb54-4f16-a964-8e473c7a3cb2)
-<img width="17504" height="6436" alt="448132106-b2c62524-9d46-4a46-9a1b-31b7617011a9" src="https://github.com/user-attachments/assets/7f5793e0-24c7-4fb0-933e-f998520a0e9d" />
 
 Project developed in order to improve software development skills. The project is based on the minesweeper game, known worldwide.
 
