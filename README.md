@@ -1,5 +1,4 @@
 ![Featured](https://github.com/user-attachments/assets/6ef33f51-fb54-4f16-a964-8e473c7a3cb2)
-<img width="512" height="512" alt="Emcash Brand" src="https://github.com/user-attachments/assets/936aad5a-67c9-4de7-9713-df17f4e3a3ab" />
 
 Project developed in order to improve software development skills. The project is based on the minesweeper game, known worldwide.
 
